@@ -18,7 +18,8 @@ interface HeaderProps {
 }
 
 const Header = ({
-  logo = "https://api.dicebear.com/7.x/initials/svg?seed=HCSK",
+  // logo = "https://api.dicebear.com/7.x/initials/svg?seed=HCSK",
+  logo = "../../../public/HolyCrossSchool_LOGO.png",
   schoolName = "Holy Cross School Kabuganj",
 }: HeaderProps) => {
   const { theme, setTheme } = useTheme();
