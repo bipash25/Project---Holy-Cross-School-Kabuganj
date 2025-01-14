@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./layout/Header";
+import Footer from "./layout/Footer";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import {
@@ -29,7 +30,7 @@ const Home = ({
   ],
 }: HomeProps) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
 
       {/* Main content with top margin to account for fixed header */}
@@ -75,55 +76,57 @@ const Home = ({
         <section className="container mx-auto px-4 py-16">
           <h2 className="text-3xl font-bold text-center mb-12">Quick Access</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col items-center text-center">
+            <Card className="p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+              <div className="flex flex-col items-center text-center h-full">
                 <GraduationCap className="h-12 w-12 text-blue-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">
                   Admission Procedures
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4 flex-grow">
                   Learn about our admission process and requirements
                 </p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full mt-auto">
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col items-center text-center">
+            <Card className="p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+              <div className="flex flex-col items-center text-center h-full">
                 <Calculator className="h-12 w-12 text-blue-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">School Fees</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4 flex-grow">
                   View our transparent fee structure
                 </p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full mt-auto">
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col items-center text-center">
+            <Card className="p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+              <div className="flex flex-col items-center text-center h-full">
                 <BookOpen className="h-12 w-12 text-blue-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Curriculum</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-muted-foreground mb-4 flex-grow">
                   Explore our comprehensive curriculum
                 </p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full mt-auto">
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </Card>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex flex-col items-center text-center">
+            <Card className="p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+              <div className="flex flex-col items-center text-center h-full">
                 <Phone className="h-12 w-12 text-blue-600 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">
                   Contact Information
                 </h3>
-                <p className="text-gray-600 mb-4">Get in touch with us</p>
-                <Button variant="outline" className="w-full">
+                <p className="text-muted-foreground mb-4 flex-grow">
+                  Get in touch with us
+                </p>
+                <Button variant="outline" className="w-full mt-auto">
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -155,6 +158,7 @@ const Home = ({
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 };
