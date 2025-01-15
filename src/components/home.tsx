@@ -18,6 +18,9 @@ import {
   Phone,
   GraduationCap,
 } from "lucide-react";
+import { BackToTop } from "./ui/back-to-top";
+import { NewsSection } from "./news/news-section";
+import { TestimonialsSection } from "./testimonials/testimonials-section";
 
 interface HomeProps {
   carouselImages?: string[];
@@ -34,6 +37,7 @@ const Home = ({
 
   return (
     <div className="min-h-screen bg-background">
+      <BackToTop />
       <Header />
 
       <main className="pt-20">
@@ -190,6 +194,12 @@ const Home = ({
             </div>
           </div>
         </section>
+
+        {/* News & Events Section */}
+        <NewsSection />
+
+        {/* Testimonials Section */}
+        <TestimonialsSection />
       </main>
 
       <Footer />

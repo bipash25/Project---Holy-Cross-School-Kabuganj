@@ -1,11 +1,13 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
+import { BackToTop } from "../ui/back-to-top";
 import { Book, Heart, Trophy, Users } from "lucide-react";
 
 const About = () => {
   return (
     <div className="min-h-screen bg-background">
+      <BackToTop />
       <Header />
       <main className="pt-20">
         {/* Hero Section */}
@@ -35,10 +37,11 @@ const About = () => {
               <div>
                 <h2 className="text-3xl font-bold mb-6">Our History</h2>
                 <p className="text-muted-foreground">
-                  Founded in 2008, Holy Cross School Kabuganj has been a beacon
-                  of educational excellence in the region. Our journey began
-                  with a vision to provide quality education that nurtures both
-                  academic excellence and moral values.
+                  Founded on February 15, 2007, by Fr. Joachim Walder, Holy
+                  Cross School Kabuganj has been a beacon of educational
+                  excellence in the region. Our journey began with a vision to
+                  provide quality education that nurtures both academic
+                  excellence and moral values.
                 </p>
               </div>
               <div>
