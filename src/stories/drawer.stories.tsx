@@ -1,31 +1,37 @@
-import { Button } from "../components/ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "../components/ui/drawer";
+import type { Meta, StoryObj } from '@storybook/react';
+import { 
+  Drawer, 
+  DrawerTrigger, 
+  DrawerContent, 
+  DrawerHeader, 
+  DrawerTitle, 
+  DrawerDescription, 
+  DrawerFooter, 
+  DrawerClose 
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
+import React from 'react';
 
-const meta = {
-  title: "ui/Drawer",
+const meta: Meta<typeof Drawer> = {
+  title: 'Components/Drawer',
   component: Drawer,
-  tags: ["autodocs"],
-  argTypes: {},
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
 };
-export default meta;
 
-export const Base = {
-  render: (args: any) => (
+export default meta;
+type Story = StoryObj<typeof Drawer>;
+
+export const Default: Story = {
+  render: (args) => (
     <Drawer {...args}>
-      <DrawerTrigger>Open</DrawerTrigger>
+      <DrawerTrigger children="Open" />
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Are you sure absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle children="Are you sure absolutely sure?" />
+          <DrawerDescription children="This action cannot be undone." />
         </DrawerHeader>
         <DrawerFooter>
           <Button>Submit</Button>
@@ -36,5 +42,24 @@ export const Base = {
       </DrawerContent>
     </Drawer>
   ),
-  args: {},
+};
+
+export const WithSnapPoints: Story = {
+  render: (args) => (
+    <Drawer {...args} snapPoints={[0.5, 0.8]}>
+      <DrawerTrigger children="Open" />
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle children="Drawer with Snap Points" />
+          <DrawerDescription children="This drawer has multiple snap points" />
+        </DrawerHeader>
+        <DrawerFooter>
+          <Button>Action</Button>
+          <DrawerClose>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  ),
 };

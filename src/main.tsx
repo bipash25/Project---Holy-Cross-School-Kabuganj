@@ -5,9 +5,6 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 
-import { TempoDevtools } from "tempo-devtools";
-TempoDevtools.init();
-
 const basename = import.meta.env.BASE_URL;
 
 // Add smooth scrolling behavior

@@ -7,16 +7,18 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { api } from "@/lib/api";
+import { api, Testimonial } from "@/lib/api";
 import { useToast } from "../ui/use-toast";
 
 const TestimonialForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Testimonial>({
+    name: "",
     author: "",
     role: "",
+    message: "",
     quote: "",
   });
 
@@ -25,7 +27,12 @@ const TestimonialForm = () => {
     setLoading(true);
 
     try {
-      await api.testimonials.create(formData);
+      await api.testimonials.create({
+        name: formData.author,
+        message: formData.quote,
+        author: formData.author,
+        role: formData.role,
+      });
       toast({
         title: "Success",
         description: "Your testimonial has been submitted successfully.",
@@ -61,7 +68,7 @@ const TestimonialForm = () => {
                     required
                     value={formData.author}
                     onChange={(e) =>
-                      setFormData({ ...formData, author: e.target.value })
+                      setFormData({ ...formData, author: e.target.value, name: e.target.value })
                     }
                     placeholder="John Doe"
                   />
@@ -87,7 +94,11 @@ const TestimonialForm = () => {
                     required
                     value={formData.quote}
                     onChange={(e) =>
-                      setFormData({ ...formData, quote: e.target.value })
+                      setFormData({ 
+                        ...formData, 
+                        quote: e.target.value,
+                        message: e.target.value 
+                      })
                     }
                     placeholder="Share your experience with our school..."
                     className="min-h-[150px]"

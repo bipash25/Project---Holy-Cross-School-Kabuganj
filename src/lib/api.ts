@@ -13,6 +13,19 @@ export interface NewsEvent {
   updated_at: string;
 }
 
+export interface Testimonial {
+  id?: string;
+  name: string;
+  message: string;
+  designation?: string;
+  created_at?: string;
+  updated_at?: string;
+  author?: string;
+  role?: string;
+  quote?: string;
+  image_url?: string;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   count: number;
@@ -37,9 +50,9 @@ export const api = {
               .select("*", { count: "exact", head: true }),
           ]);
 
-        if (error) throw new ApiError(error.message, error.code);
-        if (countError) throw new ApiError(countError.message, countError.code);
-        if (!data) throw new ApiError("No data returned from the server");
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
+        if (countError) throw new ApiError(countError.message, parseInt(countError.code || '500'));
+        if (!data) throw new ApiError("No data returned from the server", 404);
 
         return { data, count: count || 0 };
       } catch (error) {
@@ -56,8 +69,8 @@ export const api = {
           .order("date", { ascending: false })
           .limit(limit);
 
-        if (error) throw new ApiError(error.message, error.code);
-        if (!data) throw new ApiError("No data returned from the server");
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
+        if (!data) throw new ApiError("No data returned from the server", 404);
 
         return data;
       } catch (error) {
@@ -89,9 +102,9 @@ export const api = {
               .eq("type", type),
           ]);
 
-        if (error) throw new ApiError(error.message, error.code);
-        if (countError) throw new ApiError(countError.message, countError.code);
-        if (!data) throw new ApiError("No data returned from the server");
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
+        if (countError) throw new ApiError(countError.message, parseInt(countError.code || '500'));
+        if (!data) throw new ApiError("No data returned from the server", 404);
 
         return { data, count: count || 0 };
       } catch (error) {
@@ -108,13 +121,50 @@ export const api = {
           .eq("id", id)
           .single();
 
-        if (error) throw new ApiError(error.message, error.code);
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
         if (!data) throw new ApiError("News item not found", 404);
 
         return data;
       } catch (error) {
         if (error instanceof ApiError) throw error;
         throw new ApiError("Failed to fetch news item", 500);
+      }
+    },
+  },
+
+  testimonials: {
+    create: async (testimonial: Testimonial) => {
+      try {
+        const { data, error } = await supabase
+          .from("testimonials")
+          .insert(testimonial)
+          .select();
+
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
+        if (!data) throw new ApiError("Failed to create testimonial", 500);
+
+        return data[0];
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError("Failed to create testimonial", 500);
+      }
+    },
+
+    getRecent: async (limit: number = 3) => {
+      try {
+        const { data, error } = await supabase
+          .from("testimonials")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(limit);
+
+        if (error) throw new ApiError(error.message, parseInt(error.code || '500'));
+        if (!data) throw new ApiError("No testimonials found", 404);
+
+        return data;
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError("Failed to fetch recent testimonials", 500);
       }
     },
   },

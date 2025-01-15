@@ -1,134 +1,104 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card } from "../ui/card";
-import { Quote, PlusCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 import { api, Testimonial } from "@/lib/api";
+import { Skeleton } from "../ui/skeleton";
 
-export const TestimonialsSection = () => {
+const TestimonialsSection = () => {
+  const navigate = useNavigate();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadTestimonials = async () => {
+    const fetchTestimonials = async () => {
       try {
         const data = await api.testimonials.getRecent();
         setTestimonials(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load testimonials",
-        );
+      } catch (error) {
+        console.error("Failed to fetch testimonials", error);
       } finally {
         setLoading(false);
       }
     };
 
-    loadTestimonials();
+    fetchTestimonials();
   }, []);
 
   if (loading) {
     return (
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">What People Say</h2>
-            <Button
-              onClick={() => navigate("/testimonials/new")}
-              className="hidden sm:flex items-center"
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Share Your Story
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="p-6 animate-pulse">
-                <div className="space-y-4">
-                  <div className="h-8 w-8 bg-gray-300 rounded" />
-                  <div className="h-20 bg-gray-300 rounded" />
-                  <div className="flex items-center space-x-4">
-                    <div className="h-12 w-12 bg-gray-300 rounded-full" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-24 bg-gray-300 rounded" />
-                      <div className="h-4 w-32 bg-gray-300 rounded" />
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+      <section className="container mx-auto py-16 px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold">Testimonials</h2>
         </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4 text-center text-red-500">
-          {error}
+        <div className="grid md:grid-cols-3 gap-8">
+          {[1, 2, 3].map((_, index) => (
+            <div key={index} className="bg-white shadow-lg rounded-lg p-6">
+              <Skeleton className="h-4 w-full mb-4" />
+              <Skeleton className="h-4 w-3/4 mb-2" />
+              <div className="flex items-center mt-4">
+                <Skeleton className="h-12 w-12 rounded-full mr-4" />
+                <div>
+                  <Skeleton className="h-4 w-24 mb-2" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-12 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold">What People Say</h2>
-          <Button
-            onClick={() => navigate("/testimonials/new")}
-            className="hidden sm:flex items-center"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Share Your Story
-          </Button>
-        </div>
+    <section className="container mx-auto py-16 px-4">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold">Testimonials</h2>
+        <p className="text-muted-foreground mt-4">
+          Hear what our community says about us
+        </p>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
-            <Card
-              key={testimonial.id}
-              className="p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="space-y-4">
-                <Quote className="h-8 w-8 text-blue-600" />
-                <p className="text-muted-foreground italic">
-                  "{testimonial.quote}"
+      <div className="grid md:grid-cols-3 gap-8">
+        {testimonials.map((testimonial, index) => (
+          <div 
+            key={testimonial.id || index} 
+            className="bg-white shadow-lg rounded-lg p-6 flex flex-col"
+          >
+            <p className="text-lg italic mb-4 flex-grow">
+              "{testimonial.quote || testimonial.message}"
+            </p>
+
+            <div className="flex items-center mt-4">
+              {testimonial.image_url && (
+                <img
+                  src={testimonial.image_url}
+                  alt={testimonial.author || testimonial.name}
+                  className="w-12 h-12 rounded-full mr-4 object-cover"
+                />
+              )}
+              <div>
+                <p className="font-semibold">
+                  {testimonial.author || testimonial.name}
                 </p>
-                <div className="flex items-center space-x-4">
-                  {testimonial.image_url && (
-                    <img
-                      src={testimonial.image_url}
-                      alt={testimonial.author}
-                      className="h-12 w-12 rounded-full"
-                    />
-                  )}
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  {testimonial.role || testimonial.designation}
+                </p>
               </div>
-            </Card>
-          ))}
-        </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <div className="mt-8 text-center sm:hidden">
-          <Button
-            onClick={() => navigate("/testimonials/new")}
-            className="w-full"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Share Your Story
-          </Button>
-        </div>
+      <div className="text-center mt-12">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/testimonials/new")}
+        >
+          Share Your Experience
+        </Button>
       </div>
     </section>
   );
 };
+
+export default TestimonialsSection;
