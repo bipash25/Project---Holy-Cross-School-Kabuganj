@@ -13,7 +13,13 @@ const NewsPage = () => {
         type="website"
       />
       <Header />
-      {/* ... rest of the JSX ... */}
+      <main className="pt-20">
+        <div className="container mx-auto px-4 py-16">
+          <h1 className="text-4xl font-bold mb-8">News & Events</h1>
+          <NewsSection showAll />
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 };

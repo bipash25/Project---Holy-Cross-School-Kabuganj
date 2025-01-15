@@ -35,6 +35,14 @@ import NewsDetail from "./components/news/news-detail";
 // Admin Pages
 import AdminLogin from "./components/admin/login";
 import AdminDashboard from "./components/admin/dashboard";
+import NewsManager from "./components/admin/pages/NewsManager";
+import MediaManager from "./components/admin/pages/MediaManager";
+import StudentsManager from "./components/admin/pages/StudentsManager";
+import AchievementsManager from "./components/admin/pages/AchievementsManager";
+import AcademicsManager from "./components/admin/pages/AcademicsManager";
+import CalendarManager from "./components/admin/pages/CalendarManager";
+import ContentManager from "./components/admin/pages/ContentManager";
+import SettingsManager from "./components/admin/pages/SettingsManager";
 
 function App() {
   return (
@@ -92,6 +100,70 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/news"
+            element={
+              <ProtectedRoute>
+                <NewsManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/media"
+            element={
+              <ProtectedRoute>
+                <MediaManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/students"
+            element={
+              <ProtectedRoute>
+                <StudentsManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/achievements"
+            element={
+              <ProtectedRoute>
+                <AchievementsManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/academics"
+            element={
+              <ProtectedRoute>
+                <AcademicsManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/calendar"
+            element={
+              <ProtectedRoute>
+                <CalendarManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/content"
+            element={
+              <ProtectedRoute>
+                <ContentManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk-x8k9z2/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsManager />
               </ProtectedRoute>
             }
           />

@@ -8,6 +8,11 @@ export interface NewsEvent {
   type: "news" | "event";
   date: string;
   time?: string;
+  end_time?: string;
+  venue?: string;
+  organizer?: string;
+  contact_info?: string;
+  registration_link?: string;
   image_url?: string;
   created_at: string;
   updated_at: string;
