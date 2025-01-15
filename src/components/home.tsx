@@ -19,7 +19,6 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { BackToTop } from "./ui/back-to-top";
-import { HomeNewsSection } from "./news/home-news-section";
 
 interface HomeProps {
   carouselImages?: string[];
@@ -193,9 +192,6 @@ const Home = ({
             </div>
           </div>
         </section>
-
-        {/* News & Events Section */}
-        <HomeNewsSection />
       </main>
 
       <Footer />
