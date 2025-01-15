@@ -23,6 +23,8 @@ import ComputerLab from "./components/facilities/computer-lab";
 import ScienceLab from "./components/facilities/science-lab";
 
 import Contact from "./components/contact";
+import NewsPage from "./components/news/news-page";
+import NewsDetail from "./components/news/news-detail";
 import NotFound from "./components/NotFound";
 
 function App() {
@@ -61,6 +63,10 @@ function App() {
         <Route path="/academics/admissions" element={<Admissions />} />
         <Route path="/academics/guidelines" element={<Guidelines />} />
         <Route path="/academics/conduct" element={<Conduct />} />
+
+        {/* News Routes */}
+        <Route path="/news" element={<NewsPage />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
 
         {/* Contact Route */}
         <Route path="/contact" element={<Contact />} />

@@ -19,8 +19,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { BackToTop } from "./ui/back-to-top";
-import { NewsSection } from "./news/news-section";
-import { TestimonialsSection } from "./testimonials/testimonials-section";
+import { HomeNewsSection } from "./news/home-news-section";
 
 interface HomeProps {
   carouselImages?: string[];
@@ -196,10 +195,7 @@ const Home = ({
         </section>
 
         {/* News & Events Section */}
-        <NewsSection />
-
-        {/* Testimonials Section */}
-        <TestimonialsSection />
+        <HomeNewsSection />
       </main>
 
       <Footer />

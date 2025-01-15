@@ -1,44 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../ui/card";
-import { Calendar, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { api, NewsEvent } from "@/lib/api";
 
-type FilterType = "all" | "news" | "event";
-
-interface NewsSectionProps {
-  showAll?: boolean;
-}
-
-const PAGE_SIZE = 9;
-
-export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
+export const HomeNewsSection = () => {
   const [news, setNews] = useState<NewsEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>("all");
-  const [page, setPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     const loadNews = async () => {
       try {
         setLoading(true);
-        if (!showAll) {
-          const data = await api.news.getRecent(3);
-          setNews(data);
-          setTotalItems(data.length);
-        } else {
-          const response =
-            filter === "all"
-              ? await api.news.getAll(page, PAGE_SIZE)
-              : await api.news.getByType(filter, page, PAGE_SIZE);
-          setNews(response.data);
-          setTotalItems(response.count);
-        }
+        const data = await api.news.getRecent(3);
+        setNews(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load news");
       } finally {
@@ -47,14 +25,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
     };
 
     loadNews();
-  }, [filter, showAll, page]);
-
-  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, []);
 
   if (error) {
     return (
@@ -69,24 +40,16 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
   return (
     <section className="py-12 bg-muted">
       <div className="container mx-auto px-4">
-        {showAll && (
-          <div className="flex justify-center mb-8">
-            <Tabs
-              defaultValue="all"
-              value={filter}
-              onValueChange={(v) => {
-                setFilter(v as FilterType);
-                setPage(1);
-              }}
-            >
-              <TabsList className="grid w-[400px] grid-cols-3">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="news">News</TabsTrigger>
-                <TabsTrigger value="event">Events</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        )}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold">Latest News & Events</h2>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/news")}
+            className="hidden sm:flex items-center"
+          >
+            View All <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -102,7 +65,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
           </div>
         ) : news.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
-            No {filter === "all" ? "news or events" : filter} found.
+            No news or events found.
           </div>
         ) : (
           <>
@@ -149,41 +112,15 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
                 </Card>
               ))}
             </div>
-
-            {showAll && totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handlePageChange(page - 1)}
-                  disabled={page === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (pageNum) => (
-                      <Button
-                        key={pageNum}
-                        variant={pageNum === page ? "default" : "outline"}
-                        size="icon"
-                        onClick={() => handlePageChange(pageNum)}
-                      >
-                        {pageNum}
-                      </Button>
-                    ),
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handlePageChange(page + 1)}
-                  disabled={page === totalPages}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            <div className="mt-8 text-center sm:hidden">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/news")}
+                className="w-full sm:w-auto"
+              >
+                View All News & Events
+              </Button>
+            </div>
           </>
         )}
       </div>
