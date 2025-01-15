@@ -4,6 +4,7 @@ import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { SEO } from "./ui/seo";
 import {
   ChevronRight,
   BookOpen,
@@ -58,6 +59,12 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Home"
+        description="Welcome to Holy Cross School Kabuganj. We provide quality education and nurture young minds for a better future."
+        keywords="school, education, Holy Cross, Kabuganj, admission, academics, students"
+        type="website"
+      />
       <BackToTop />
       <Header />
 

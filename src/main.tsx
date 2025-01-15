@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
+import { HelmetProvider } from "react-helmet-async";
 
 import { TempoDevtools } from "tempo-devtools";
 TempoDevtools.init();
@@ -18,10 +19,12 @@ window.history.scrollRestoration = "manual";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter basename={basename}>
-      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter basename={basename}>
+        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   </React.StrictMode>,
 );
