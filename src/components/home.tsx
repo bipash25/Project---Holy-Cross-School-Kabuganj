@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { Card } from "./ui/card";
@@ -29,6 +30,8 @@ const Home = ({
     "https://images.unsplash.com/photo-1497633762265-9d179a990aa6",
   ],
 }: HomeProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -57,6 +60,7 @@ const Home = ({
                         <Button
                           size="lg"
                           className="bg-blue-600 hover:bg-blue-700"
+                          onClick={() => navigate("/about")}
                         >
                           Learn More
                         </Button>
@@ -86,7 +90,11 @@ const Home = ({
                 <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
                   Learn about our admission process and requirements
                 </p>
-                <Button variant="outline" className="w-full mt-auto">
+                <Button
+                  variant="outline"
+                  className="w-full mt-auto"
+                  onClick={() => navigate("/academics/admissions")}
+                >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -101,7 +109,11 @@ const Home = ({
                 <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
                   View our transparent fee structure
                 </p>
-                <Button variant="outline" className="w-full mt-auto">
+                <Button
+                  variant="outline"
+                  className="w-full mt-auto"
+                  onClick={() => navigate("/info/fees")}
+                >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -116,7 +128,11 @@ const Home = ({
                 <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
                   Explore our comprehensive curriculum
                 </p>
-                <Button variant="outline" className="w-full mt-auto">
+                <Button
+                  variant="outline"
+                  className="w-full mt-auto"
+                  onClick={() => navigate("/info/curriculum")}
+                >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -131,7 +147,11 @@ const Home = ({
                 <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
                   Get in touch with us
                 </p>
-                <Button variant="outline" className="w-full mt-auto">
+                <Button
+                  variant="outline"
+                  className="w-full mt-auto"
+                  onClick={() => navigate("/contact")}
+                >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

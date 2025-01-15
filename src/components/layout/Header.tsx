@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,14 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import {
-  Moon,
-  School,
-  Sun,
-  Menu,
-  ChevronDown,
-  ChevronRight,
-} from "lucide-react";
+import { Moon, Sun, Menu, ChevronRight } from "lucide-react";
 import { useTheme } from "../theme-provider";
 import {
   Accordion,
@@ -33,16 +27,13 @@ import {
 } from "../ui/accordion";
 
 interface HeaderProps {
-  logo?: string;
   schoolName?: string;
 }
 
-const Header = ({
-  logo = "https://api.dicebear.com/7.x/initials/svg?seed=HCSK",
-  schoolName = "Holy Cross School Kabuganj",
-}: HeaderProps) => {
+const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const menuItems = [
     {
@@ -90,7 +81,11 @@ const Header = ({
           to="/"
           className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
         >
-          <School className="h-8 w-8 text-blue-600" />
+          <img
+            src={logo}
+            alt="School Logo"
+            className="h-12 w-12 object-contain"
+          />
           <span className="text-xl font-bold text-foreground hidden sm:inline">
             {schoolName}
           </span>
@@ -140,7 +135,9 @@ const Header = ({
               <Moon className="h-5 w-5" />
             )}
           </Button>
-          <Button variant="outline">Contact Us</Button>
+          <Button variant="outline" onClick={() => navigate("/contact")}>
+            Contact Us
+          </Button>
         </div>
 
         {/* Mobile Navigation */}

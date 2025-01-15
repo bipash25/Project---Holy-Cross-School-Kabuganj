@@ -64,10 +64,10 @@ const FeeStructure = () => {
                 {feeStructure.map((fee) => (
                   <TableRow key={fee.class}>
                     <TableCell className="font-medium">{fee.class}</TableCell>
-                    <TableCell>৳{fee.admission}</TableCell>
-                    <TableCell>৳{fee.monthly}</TableCell>
-                    <TableCell>৳{fee.exam}</TableCell>
-                    <TableCell>৳{fee.total}</TableCell>
+                    <TableCell>₹{fee.admission}</TableCell>
+                    <TableCell>₹{fee.monthly}</TableCell>
+                    <TableCell>₹{fee.exam}</TableCell>
+                    <TableCell>₹{fee.total}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -79,10 +79,10 @@ const FeeStructure = () => {
               <h2 className="text-2xl font-semibold mb-4">Additional Fees</h2>
               <Card className="p-6">
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>Library Fee: ৳500 per year</li>
-                  <li>Laboratory Fee: ৳1000 per year (Classes 6-10)</li>
-                  <li>Computer Lab Fee: ৳800 per year</li>
-                  <li>Sports Fee: ৳500 per year</li>
+                  <li>Library Fee: ₹500 per year</li>
+                  <li>Laboratory Fee: ₹1000 per year (Classes 6-10)</li>
+                  <li>Computer Lab Fee: ₹800 per year</li>
+                  <li>Sports Fee: ₹500 per year</li>
                 </ul>
               </Card>
             </section>

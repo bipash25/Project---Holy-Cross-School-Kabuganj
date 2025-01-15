@@ -27,7 +27,7 @@ const History = () => {
             <div className="text-white">
               <h1 className="text-4xl font-bold mb-4">Our History</h1>
               <p className="text-xl max-w-2xl">
-                A journey of excellence since 2008
+                A journey of excellence since 2007
               </p>
             </div>
           </div>
@@ -41,11 +41,12 @@ const History = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-4">The Beginning</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  Founded in 2008, Holy Cross School Kabuganj emerged from a
-                  vision to provide quality education in the region. What
-                  started as a small institution with just a handful of students
-                  has grown into one of the most respected educational
-                  institutions in the area.
+                  Founded on February 15, 2007, Holy Cross School Kabuganj was
+                  established with a vision to provide quality education to the
+                  region. Founded as a small institution with just a handful of
+                  students, it has since grown into one of the most respected
+                  educational institutions in the area, fostering academic
+                  excellence and holistic development.
                 </p>
               </div>
             </div>
@@ -59,13 +60,14 @@ const History = () => {
                 <div className="flex gap-4">
                   <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xl font-bold text-blue-600">
-                      2008
+                      2007
                     </span>
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Foundation</h3>
                     <p className="text-muted-foreground">
-                      School founded with primary section
+                      School founded with primary section and a mission to
+                      provide quality education and holistic development.
                     </p>
                   </div>
                 </div>
@@ -81,7 +83,8 @@ const History = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Expansion</h3>
                     <p className="text-muted-foreground">
-                      Secondary section introduced
+                      The school introduced its secondary section to cater to
+                      students up to Class 10.
                     </p>
                   </div>
                 </div>
@@ -99,7 +102,9 @@ const History = () => {
                       First Milestone
                     </h3>
                     <p className="text-muted-foreground">
-                      First batch of SSC graduates with excellent results
+                      The first batch of HSLC graduates achieved outstanding
+                      results in 2012, setting a benchmark for academic
+                      excellence.
                     </p>
                   </div>
                 </div>
@@ -115,7 +120,8 @@ const History = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">New Campus</h3>
                     <p className="text-muted-foreground">
-                      New modern campus building inaugurated
+                      A new modern campus with advanced facilities was
+                      inaugurated in 2015, enhancing the learning environment.
                     </p>
                   </div>
                 </div>
@@ -135,7 +141,7 @@ const History = () => {
                   Academic Excellence
                 </h3>
                 <p className="text-muted-foreground">
-                  Consistently achieving 95%+ pass rate in SSC examinations
+                  Consistently achieving 95%+ pass rate in HSLC examinations
                 </p>
               </Card>
 

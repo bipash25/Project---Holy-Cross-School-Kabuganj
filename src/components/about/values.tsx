@@ -6,7 +6,7 @@ import { Heart, Users, Brain, Target, Star, Shield } from "lucide-react";
 const Values = () => {
   const values = [
     {
-      icon: <Heart className="h-12 w-12 text-red-500" />,
+      icon: <Heart className="h-8 w-8 text-red-500" />,
       title: "Compassion",
       description: "Nurturing empathy and understanding towards others",
       points: [
@@ -16,7 +16,7 @@ const Values = () => {
       ],
     },
     {
-      icon: <Brain className="h-12 w-12 text-purple-500" />,
+      icon: <Brain className="h-8 w-8 text-purple-500" />,
       title: "Academic Excellence",
       description: "Striving for the highest standards in education",
       points: [
@@ -26,7 +26,7 @@ const Values = () => {
       ],
     },
     {
-      icon: <Users className="h-12 w-12 text-blue-500" />,
+      icon: <Users className="h-8 w-8 text-blue-500" />,
       title: "Collaboration",
       description: "Working together towards common goals",
       points: [
@@ -36,7 +36,7 @@ const Values = () => {
       ],
     },
     {
-      icon: <Target className="h-12 w-12 text-green-500" />,
+      icon: <Target className="h-8 w-8 text-green-500" />,
       title: "Innovation",
       description: "Embracing new ideas and approaches",
       points: [
@@ -46,7 +46,7 @@ const Values = () => {
       ],
     },
     {
-      icon: <Star className="h-12 w-12 text-yellow-500" />,
+      icon: <Star className="h-8 w-8 text-yellow-500" />,
       title: "Leadership",
       description: "Developing tomorrow's leaders",
       points: [
@@ -56,7 +56,7 @@ const Values = () => {
       ],
     },
     {
-      icon: <Shield className="h-12 w-12 text-indigo-500" />,
+      icon: <Shield className="h-8 w-8 text-indigo-500" />,
       title: "Integrity",
       description: "Upholding moral and ethical principles",
       points: [
@@ -97,25 +97,23 @@ const Values = () => {
             {values.map((value, index) => (
               <Card
                 key={index}
-                className="p-6 hover:shadow-lg transition-shadow"
+                className="p-8 hover:shadow-lg transition-shadow bg-card"
               >
-                <div className="text-center mb-6">
-                  {value.icon}
-                  <h3 className="text-2xl font-semibold mt-4 mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-6">{value.icon}</div>
+                  <h3 className="text-xl font-semibold mb-3">{value.title}</h3>
+                  <p className="text-muted-foreground mb-6">
                     {value.description}
                   </p>
+                  <ul className="space-y-2 text-sm text-muted-foreground w-full text-left">
+                    {value.points.map((point, idx) => (
+                      <li key={idx} className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary mr-2 flex-shrink-0" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  {value.points.map((point, idx) => (
-                    <li key={idx} className="flex items-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
               </Card>
             ))}
           </div>
