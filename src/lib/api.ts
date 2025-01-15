@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { ApiError } from "./error-handling";
 
 export interface NewsEvent {
   id: string;
@@ -20,35 +21,49 @@ export interface PaginatedResponse<T> {
 export const api = {
   news: {
     getAll: async (page: number = 1, pageSize: number = 9) => {
-      const from = (page - 1) * pageSize;
-      const to = from + pageSize - 1;
+      try {
+        const from = (page - 1) * pageSize;
+        const to = from + pageSize - 1;
 
-      const [{ data, error }, { count, error: countError }] = await Promise.all(
-        [
-          supabase
-            .from("news_events")
-            .select("*")
-            .order("date", { ascending: false })
-            .range(from, to),
-          supabase
-            .from("news_events")
-            .select("*", { count: "exact", head: true }),
-        ],
-      );
+        const [{ data, error }, { count, error: countError }] =
+          await Promise.all([
+            supabase
+              .from("news_events")
+              .select("*")
+              .order("date", { ascending: false })
+              .range(from, to),
+            supabase
+              .from("news_events")
+              .select("*", { count: "exact", head: true }),
+          ]);
 
-      if (error || countError) throw error || countError;
-      return { data: data || [], count: count || 0 };
+        if (error) throw new ApiError(error.message, error.code);
+        if (countError) throw new ApiError(countError.message, countError.code);
+        if (!data) throw new ApiError("No data returned from the server");
+
+        return { data, count: count || 0 };
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError("Failed to fetch news", 500);
+      }
     },
 
     getRecent: async (limit: number = 3) => {
-      const { data, error } = await supabase
-        .from("news_events")
-        .select("*")
-        .order("date", { ascending: false })
-        .limit(limit);
+      try {
+        const { data, error } = await supabase
+          .from("news_events")
+          .select("*")
+          .order("date", { ascending: false })
+          .limit(limit);
 
-      if (error) throw error;
-      return data;
+        if (error) throw new ApiError(error.message, error.code);
+        if (!data) throw new ApiError("No data returned from the server");
+
+        return data;
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError("Failed to fetch recent news", 500);
+      }
     },
 
     getByType: async (
@@ -56,37 +71,51 @@ export const api = {
       page: number = 1,
       pageSize: number = 9,
     ) => {
-      const from = (page - 1) * pageSize;
-      const to = from + pageSize - 1;
+      try {
+        const from = (page - 1) * pageSize;
+        const to = from + pageSize - 1;
 
-      const [{ data, error }, { count, error: countError }] = await Promise.all(
-        [
-          supabase
-            .from("news_events")
-            .select("*")
-            .eq("type", type)
-            .order("date", { ascending: false })
-            .range(from, to),
-          supabase
-            .from("news_events")
-            .select("*", { count: "exact", head: true })
-            .eq("type", type),
-        ],
-      );
+        const [{ data, error }, { count, error: countError }] =
+          await Promise.all([
+            supabase
+              .from("news_events")
+              .select("*")
+              .eq("type", type)
+              .order("date", { ascending: false })
+              .range(from, to),
+            supabase
+              .from("news_events")
+              .select("*", { count: "exact", head: true })
+              .eq("type", type),
+          ]);
 
-      if (error || countError) throw error || countError;
-      return { data: data || [], count: count || 0 };
+        if (error) throw new ApiError(error.message, error.code);
+        if (countError) throw new ApiError(countError.message, countError.code);
+        if (!data) throw new ApiError("No data returned from the server");
+
+        return { data, count: count || 0 };
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError(`Failed to fetch ${type} items`, 500);
+      }
     },
 
     getById: async (id: string) => {
-      const { data, error } = await supabase
-        .from("news_events")
-        .select("*")
-        .eq("id", id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from("news_events")
+          .select("*")
+          .eq("id", id)
+          .single();
 
-      if (error) throw error;
-      return data;
+        if (error) throw new ApiError(error.message, error.code);
+        if (!data) throw new ApiError("News item not found", 404);
+
+        return data;
+      } catch (error) {
+        if (error instanceof ApiError) throw error;
+        throw new ApiError("Failed to fetch news item", 500);
+      }
     },
   },
 };

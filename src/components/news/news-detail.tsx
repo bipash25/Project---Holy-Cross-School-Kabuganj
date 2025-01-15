@@ -3,9 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Button } from "../ui/button";
-import { Calendar, Clock, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, AlertTriangle } from "lucide-react";
 import { api, NewsEvent } from "@/lib/api";
 import { Skeleton } from "../ui/skeleton";
+import { getErrorMessage } from "@/lib/error-handling";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 const NewsDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +23,7 @@ const NewsDetail = () => {
         const data = await api.news.getById(id);
         setNews(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load news");
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -65,8 +67,12 @@ const NewsDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="pt-20">
-          <div className="container mx-auto px-4 py-8 text-center">
-            <p className="text-red-500 mb-4">{error || "News not found"}</p>
+          <div className="container mx-auto px-4 py-8">
+            <Alert variant="destructive" className="mb-6">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error || "News not found"}</AlertDescription>
+            </Alert>
             <Button
               onClick={() => navigate(-1)}
               variant="outline"
