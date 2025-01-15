@@ -5,6 +5,7 @@ import { Calendar, Clock, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { api, NewsEvent } from "@/lib/api";
+import { Skeleton } from "../ui/skeleton";
 
 type FilterType = "all" | "news" | "event";
 
@@ -13,6 +14,25 @@ interface NewsSectionProps {
 }
 
 const PAGE_SIZE = 9;
+
+const NewsCardSkeleton = () => (
+  <Card className="p-6">
+    <div className="space-y-4">
+      <Skeleton className="h-6 w-16" />
+      <Skeleton className="h-8 w-3/4" />
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+      <Skeleton className="h-10 w-full" />
+    </div>
+  </Card>
+);
 
 export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
   const [news, setNews] = useState<NewsEvent[]>([]);
@@ -90,14 +110,8 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="p-6 animate-pulse">
-                <div className="h-4 bg-gray-300 rounded w-1/4 mb-4" />
-                <div className="h-6 bg-gray-300 rounded w-3/4 mb-4" />
-                <div className="h-4 bg-gray-300 rounded w-1/2 mb-4" />
-                <div className="h-20 bg-gray-300 rounded mb-4" />
-                <div className="h-10 bg-gray-300 rounded" />
-              </Card>
+            {Array.from({ length: showAll ? 9 : 3 }).map((_, i) => (
+              <NewsCardSkeleton key={i} />
             ))}
           </div>
         ) : news.length === 0 ? (

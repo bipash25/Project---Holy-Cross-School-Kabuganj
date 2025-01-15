@@ -5,6 +5,7 @@ import Footer from "../layout/Footer";
 import { Button } from "../ui/button";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import { api, NewsEvent } from "@/lib/api";
+import { Skeleton } from "../ui/skeleton";
 
 const NewsDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,14 +35,23 @@ const NewsDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="pt-20">
-          <div className="container mx-auto px-4 py-8 animate-pulse">
-            <div className="h-8 bg-gray-300 rounded w-3/4 mb-4" />
-            <div className="h-4 bg-gray-300 rounded w-1/4 mb-8" />
-            <div className="h-64 bg-gray-300 rounded mb-8" />
+          <div className="container mx-auto px-4 py-8">
+            <Button
+              onClick={() => navigate(-1)}
+              variant="outline"
+              className="mb-6 inline-flex items-center"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to News
+            </Button>
+
+            <Skeleton className="h-8 w-24 mb-4" />
+            <Skeleton className="h-12 w-3/4 mb-4" />
+            <Skeleton className="h-6 w-48 mb-6" />
+            <Skeleton className="h-[400px] w-full mb-8" />
             <div className="space-y-4">
-              <div className="h-4 bg-gray-300 rounded w-full" />
-              <div className="h-4 bg-gray-300 rounded w-full" />
-              <div className="h-4 bg-gray-300 rounded w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
             </div>
           </div>
         </main>
