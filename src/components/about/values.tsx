@@ -75,7 +75,7 @@ const Values = () => {
         <section className="relative h-[300px] mb-12">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1577896851231-70ef18881754"
+              src="/src/assets/about_2.jpg"
               alt="School Values"
               className="w-full h-full object-cover"
             />

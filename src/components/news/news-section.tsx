@@ -15,8 +15,7 @@ interface NewsSectionProps {
 }
 
 const PAGE_SIZE = 9;
-const DEFAULT_IMAGE =
-  "https://images.unsplash.com/photo-1546410531-bb4caa6b424d";
+const DEFAULT_IMAGE = "/src/assets/images/slider1.jpg";
 
 const NewsCardSkeleton = () => (
   <Card className="p-6">

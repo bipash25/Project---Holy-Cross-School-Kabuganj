@@ -7,6 +7,10 @@ import { ProtectedRoute } from "./components/admin/protected-route";
 // Pages
 import Home from "./components/home";
 import About from "./components/about";
+import History from "./components/about/history";
+import Mission from "./components/about/mission";
+import Values from "./components/about/values";
+import Statistics from "./components/about/statistics";
 import Contact from "./components/contact";
 import NotFound from "./components/NotFound";
 
@@ -60,10 +64,10 @@ function App() {
 
           {/* About Routes */}
           <Route path="/about" element={<About />} />
-          <Route path="/about/history" element={<About />} />
-          <Route path="/about/mission" element={<About />} />
-          <Route path="/about/values" element={<About />} />
-          <Route path="/about/statistics" element={<About />} />
+          <Route path="/about/history" element={<History />} />
+          <Route path="/about/mission" element={<Mission />} />
+          <Route path="/about/values" element={<Values />} />
+          <Route path="/about/statistics" element={<Statistics />} />
 
           {/* School Info Routes */}
           <Route path="/info/fees" element={<FeeStructure />} />

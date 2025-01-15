@@ -52,9 +52,9 @@ const achievements = [
 const Home = () => {
   const navigate = useNavigate();
   const carouselImages = [
-    "https://images.unsplash.com/photo-1580582932707-520aed937b7b",
-    "https://images.unsplash.com/photo-1546410531-bb4caa6b424d",
-    "https://images.unsplash.com/photo-1497633762265-9d179a990aa6",
+    "/src/assets/images/slider1.jpg",
+    "/src/assets/images/slider2.jpg",
+    "/src/assets/images/slider5.jpg",
   ];
 
   return (

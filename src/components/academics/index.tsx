@@ -12,7 +12,7 @@ const Academics = () => {
         <section className="relative h-[400px]">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1509062522246-3755977927d7"
+              src="/src/assets/slider5.jpg"
               alt="Academic Life"
               className="w-full h-full object-cover"
             />

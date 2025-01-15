@@ -17,7 +17,7 @@ const History = () => {
         <section className="relative h-[300px] mb-12">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f"
+              src="/src/assets/about_1.jpg"
               alt="School History"
               className="w-full h-full object-cover"
             />
