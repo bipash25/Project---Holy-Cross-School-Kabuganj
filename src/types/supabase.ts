@@ -9,38 +9,134 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      activities: {
+        Row: {}
+        Insert: {}
+        Update: {}
+        Relationships: []
+      }
       news_events: {
         Row: {
+          contact_info: string | null
           created_at: string
           date: string
           description: string
+          end_time: string | null
           id: string
           image_url: string | null
+          organizer: string | null
+          registration_link: string | null
           time: string | null
           title: string
           type: string
           updated_at: string
+          venue: string | null
         }
         Insert: {
+          contact_info?: string | null
           created_at?: string
           date: string
           description: string
+          end_time?: string | null
           id?: string
           image_url?: string | null
+          organizer?: string | null
+          registration_link?: string | null
           time?: string | null
           title: string
           type: string
           updated_at?: string
+          venue?: string | null
         }
         Update: {
+          contact_info?: string | null
           created_at?: string
           date?: string
           description?: string
+          end_time?: string | null
           id?: string
           image_url?: string | null
+          organizer?: string | null
+          registration_link?: string | null
           time?: string | null
           title?: string
           type?: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Relationships: []
+      }
+      school_stats: {
+        Row: {
+          cultural_awards: number
+          district_toppers: number
+          id: string
+          science_fair_wins: number
+          sports_medals: number
+          success_rate: number
+          total_staff: number
+          total_students: number
+          total_teachers: number
+          updated_at: string
+          years_of_excellence: number
+        }
+        Insert: {
+          cultural_awards: number
+          district_toppers: number
+          id?: string
+          science_fair_wins: number
+          sports_medals: number
+          success_rate: number
+          total_staff: number
+          total_students: number
+          total_teachers: number
+          updated_at?: string
+          years_of_excellence: number
+        }
+        Update: {
+          cultural_awards?: number
+          district_toppers?: number
+          id?: string
+          science_fair_wins?: number
+          sports_medals?: number
+          success_rate?: number
+          total_staff?: number
+          total_students?: number
+          total_teachers?: number
+          updated_at?: string
+          years_of_excellence?: number
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          admission_date: string
+          class: string
+          created_at: string
+          id: string
+          name: string
+          roll_number: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          admission_date: string
+          class: string
+          created_at?: string
+          id?: string
+          name: string
+          roll_number: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          admission_date?: string
+          class?: string
+          created_at?: string
+          id?: string
+          name?: string
+          roll_number?: string
+          section?: string
           updated_at?: string
         }
         Relationships: []
