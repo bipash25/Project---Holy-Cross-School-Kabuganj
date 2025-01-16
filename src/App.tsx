@@ -9,6 +9,7 @@ import Home from "./components/home";
 import About from "./components/about";
 import History from "./components/about/history";
 import Mission from "./components/about/mission";
+import Message from "./components/about/message";
 import Values from "./components/about/values";
 import Statistics from "./components/about/statistics";
 import Contact from "./components/contact";
@@ -65,6 +66,7 @@ function App() {
           {/* About Routes */}
           <Route path="/about" element={<About />} />
           <Route path="/about/history" element={<History />} />
+          <Route path="/about/message" element={<Message />} />
           <Route path="/about/mission" element={<Mission />} />
           <Route path="/about/values" element={<Values />} />
           <Route path="/about/statistics" element={<Statistics />} />

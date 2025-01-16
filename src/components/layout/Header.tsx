@@ -39,6 +39,7 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
     {
       title: "About Us",
       items: [
+        { href: "/about/message", label: "Principal's Message" },
         { href: "/about/history", label: "History" },
         { href: "/about/mission", label: "Mission & Vision" },
         { href: "/about/values", label: "Core Values" },
