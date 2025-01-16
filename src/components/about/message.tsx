@@ -30,7 +30,7 @@ const Message = () => {
                     />
                   </div>
                   <div className="mt-4 text-center">
-                    <h3 className="font-semibold">Fr. James Thomas</h3>
+                    <h3 className="font-semibold">Sr. Rose (C J)</h3>
                     <p className="text-sm text-muted-foreground">Principal</p>
                   </div>
                 </div>
@@ -43,7 +43,6 @@ const Message = () => {
                   </div>
 
                   <div className="space-y-4 text-muted-foreground">
-                    <p>Dear Parents, Students, and Well-wishers,</p>
                     <p>
                       Every individual is a unique creation. God has shaped man
                       in a special way and bestowed upon him many blessings
@@ -83,9 +82,9 @@ const Message = () => {
                     <p className="pt-4">
                       Best regards,
                       <br />
-                      Fr. James Thomas
+                      Sr. Rose (C J)
                       <br />
-                      Principal
+                      Principal, Holy Cross School, Kabuganj
                     </p>
                   </div>
                 </div>
