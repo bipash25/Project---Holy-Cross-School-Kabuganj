@@ -1,6 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
+import aboutImage from "@/assets/images/about_1.jpg";
 import {
   History as HistoryIcon,
   School,
@@ -17,7 +18,7 @@ const History = () => {
         <section className="relative h-[300px] mb-12">
           <div className="absolute inset-0">
             <img
-              src="/src/assets/about_1.jpg"
+              src={aboutImage}
               alt="School History"
               className="w-full h-full object-cover"
             />

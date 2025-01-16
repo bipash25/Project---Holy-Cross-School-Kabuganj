@@ -5,6 +5,7 @@ import { Calendar, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { api, NewsEvent } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
+import defaultImage from "@/assets/images/slider1.jpg";
 
 type FilterType = "all" | "news" | "event";
 
@@ -13,7 +14,6 @@ interface NewsSectionProps {
 }
 
 const PAGE_SIZE = 9;
-const DEFAULT_IMAGE = "/src/assets/images/slider1.jpg";
 
 const NewsCardSkeleton = () => (
   <Card className="p-6">
@@ -138,17 +138,12 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
             >
               <div className="aspect-video relative">
                 <img
-                  src={item.image_url || DEFAULT_IMAGE}
+                  src={item.image_url || defaultImage}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6 space-y-4">
-                <div
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.type === "event" ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300" : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"}`}
-                >
-                  {item.type === "event" ? "Event" : "News"}
-                </div>
                 <h3 className="text-xl font-semibold line-clamp-2">
                   {item.title}
                 </h3>
@@ -163,6 +158,11 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
                       {item.time}
                     </div>
                   )}
+                  <div
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.type === "event" ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300" : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"}`}
+                  >
+                    {item.type === "event" ? "Event" : "News"}
+                  </div>
                 </div>
                 <p className="text-muted-foreground line-clamp-3">
                   {item.description}

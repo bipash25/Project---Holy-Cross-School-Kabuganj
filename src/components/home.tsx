@@ -22,6 +22,10 @@ import { ErrorBoundary } from "./ui/error-boundary";
 import CarouselSection from "./home/carousel-section";
 import NewsSection from "./home/news-section";
 
+import slider1 from "@/assets/images/slider1.jpg";
+import slider2 from "@/assets/images/slider2.jpg";
+import slider5 from "@/assets/images/slider5.jpg";
+
 const achievements = [
   {
     icon: <Trophy className="h-12 w-12 text-yellow-500" />,
@@ -51,11 +55,7 @@ const achievements = [
 
 const Home = () => {
   const navigate = useNavigate();
-  const carouselImages = [
-    "/src/assets/images/slider1.jpg",
-    "/src/assets/images/slider2.jpg",
-    "/src/assets/images/slider5.jpg",
-  ];
+  const carouselImages = [slider1, slider2, slider5];
 
   return (
     <div className="min-h-screen bg-background">

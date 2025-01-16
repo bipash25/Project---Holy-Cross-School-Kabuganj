@@ -1,6 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
+import aboutImage from "@/assets/images/about_2.jpg";
 import { Heart, Users, Brain, Target, Star, Shield } from "lucide-react";
 
 const Values = () => {
@@ -75,7 +76,7 @@ const Values = () => {
         <section className="relative h-[300px] mb-12">
           <div className="absolute inset-0">
             <img
-              src="/src/assets/about_2.jpg"
+              src={aboutImage}
               alt="School Values"
               className="w-full h-full object-cover"
             />
