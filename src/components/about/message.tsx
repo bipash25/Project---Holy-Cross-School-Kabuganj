@@ -84,7 +84,7 @@ const Message = () => {
                       <br />
                       Sr. Rose (C J)
                       <br />
-                      Principal, Holy Cross School, Kabuganj
+                      Holy Cross School, Kabuganj
                     </p>
                   </div>
                 </div>
