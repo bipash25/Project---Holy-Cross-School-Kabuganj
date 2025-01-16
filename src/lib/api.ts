@@ -8,13 +8,13 @@ export interface NewsEvent {
   description: string;
   type: "news" | "event";
   date: string;
-  time?: string;
-  end_time?: string;
-  venue?: string;
-  organizer?: string;
-  contact_info?: string;
-  registration_link?: string;
-  image_url?: string;
+  time?: string | null;
+  end_time?: string | null;
+  venue?: string | null;
+  organizer?: string | null;
+  contact_info?: string | null;
+  registration_link?: string | null;
+  image_url?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -50,6 +50,8 @@ const handleSupabaseError = (
       );
     case "42703":
       return new ApiError("Invalid column name in the request.", 400);
+    case "22007":
+      return new ApiError("Invalid date or time format", 400);
     default:
       return new ApiError(
         `${operation} failed: ${error.message}`,
@@ -61,8 +63,39 @@ const handleSupabaseError = (
 const convertEmptyToNull = (
   value: string | undefined | null,
 ): string | null => {
-  if (!value || value.trim() === "") return null;
+  if (value === undefined || value === null || value.trim() === "") return null;
   return value.trim();
+};
+
+// New helper function to clean all optional fields in a news event
+const cleanNewsEventData = (
+  newsEvent: Partial<NewsEvent>,
+): Partial<NewsEvent> => {
+  const cleaned: Partial<NewsEvent> = { ...newsEvent };
+
+  // List of optional fields that should be converted from empty string to null
+  const optionalFields: (keyof NewsEvent)[] = [
+    "time",
+    "end_time",
+    "venue",
+    "organizer",
+    "contact_info",
+    "registration_link",
+    "image_url",
+  ];
+
+  // Convert empty strings to null for optional fields
+  optionalFields.forEach((field) => {
+    if (field in cleaned) {
+      cleaned[field] = convertEmptyToNull(cleaned[field] as string);
+    }
+  });
+
+  // Trim required string fields if they exist
+  if (cleaned.title) cleaned.title = cleaned.title.trim();
+  if (cleaned.description) cleaned.description = cleaned.description.trim();
+
+  return cleaned;
 };
 
 export const api = {
@@ -138,19 +171,9 @@ export const api = {
           throw new ApiError('Type must be either "news" or "event"', 400);
         }
 
-        // Clean up the data - convert empty strings to null for optional fields
+        // Clean up the data
         const cleanedData = {
-          title: newsEvent.title.trim(),
-          description: newsEvent.description.trim(),
-          type: newsEvent.type,
-          date: newsEvent.date,
-          time: convertEmptyToNull(newsEvent.time),
-          end_time: convertEmptyToNull(newsEvent.end_time),
-          venue: convertEmptyToNull(newsEvent.venue),
-          organizer: convertEmptyToNull(newsEvent.organizer),
-          contact_info: convertEmptyToNull(newsEvent.contact_info),
-          registration_link: convertEmptyToNull(newsEvent.registration_link),
-          image_url: convertEmptyToNull(newsEvent.image_url),
+          ...cleanNewsEventData(newsEvent),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
@@ -189,9 +212,15 @@ export const api = {
 
     update: async (id: string, updates: Partial<NewsEvent>) => {
       try {
+        // Clean the update data before sending to database
+        const cleanedUpdates = {
+          ...cleanNewsEventData(updates),
+          updated_at: new Date().toISOString(),
+        };
+
         const { data, error } = await supabase
           .from("news_events")
-          .update({ ...updates, updated_at: new Date().toISOString() })
+          .update(cleanedUpdates)
           .eq("id", id)
           .select()
           .single();

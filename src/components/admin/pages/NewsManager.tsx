@@ -28,6 +28,34 @@ interface MediaItem {
   created_at: string;
 }
 
+const cleanFormData = (data: Record<string, any>) => {
+  const nullableFields = [
+    "time",
+    "end_time",
+    "venue",
+    "organizer",
+    "contact_info",
+    "registration_link",
+    "image_url",
+  ];
+
+  const cleaned = { ...data };
+
+  // Clean nullable fields
+  nullableFields.forEach((field) => {
+    if (field in cleaned && typeof cleaned[field] === "string") {
+      cleaned[field] =
+        cleaned[field].trim() === "" ? null : cleaned[field].trim();
+    }
+  });
+
+  // Clean required fields (just trim them)
+  if (cleaned.title) cleaned.title = cleaned.title.trim();
+  if (cleaned.description) cleaned.description = cleaned.description.trim();
+
+  return cleaned;
+};
+
 const NewsManager = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -92,13 +120,16 @@ const NewsManager = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("news_events").insert([
-        {
-          ...formData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ]);
+      // Clean the form data before submission
+      const cleanedData = cleanFormData({
+        ...formData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+
+      const { error } = await supabase
+        .from("news_events")
+        .insert([cleanedData]);
 
       if (error) throw error;
 

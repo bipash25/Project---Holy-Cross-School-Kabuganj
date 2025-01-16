@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "@/assets/logo.png";
+
+// shadcn/ui or your own UI library imports
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,7 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Moon, Sun, Menu, ChevronRight } from "lucide-react";
+import { Moon, Sun, Menu, X } from "lucide-react";
 import { useTheme } from "../theme-provider";
 import {
   Accordion,
@@ -34,7 +36,9 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // Menu items for both desktop & mobile
   const menuItems = [
     {
       title: "About Us",
@@ -77,7 +81,7 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
   return (
     <header className="w-full h-20 bg-background border-b border-border fixed top-0 left-0 z-50">
       <div className="container mx-auto px-4 h-full flex items-center">
-        {/* Logo and School Name */}
+        {/* LOGO + SCHOOL NAME */}
         <Link
           to="/"
           className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
@@ -87,6 +91,7 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
             alt="School Logo"
             className="h-12 w-12 object-contain"
           />
+          {/* Full name on larger screens, short on smaller */}
           <span className="text-xl font-bold text-foreground hidden sm:inline">
             {schoolName}
           </span>
@@ -95,7 +100,7 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* DESKTOP NAVIGATION */}
         <div className="hidden lg:flex flex-1 justify-center">
           <NavigationMenu>
             <NavigationMenuList>
@@ -123,7 +128,7 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
           </NavigationMenu>
         </div>
 
-        {/* Desktop Theme Toggle and Contact */}
+        {/* DESKTOP THEME & CONTACT BUTTONS */}
         <div className="hidden lg:flex items-center space-x-2">
           <Button
             variant="ghost"
@@ -141,60 +146,120 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
           </Button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* MOBILE NAVIGATION (Hamburger) */}
         <div className="lg:hidden ml-auto">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-transparent"
+              >
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px] p-0">
-              <SheetHeader className="p-6 border-b">
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <div className="px-6 py-4">
-                <Accordion type="single" collapsible className="w-full">
-                  {menuItems.map((menu, index) => (
-                    <AccordionItem key={index} value={`item-${index}`}>
-                      <AccordionTrigger className="text-lg">
-                        {menu.title}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="flex flex-col space-y-2 pl-4">
-                          {menu.items.map((item, idx) => (
-                            <Link
-                              key={idx}
-                              to={item.href}
-                              className="p-2 hover:bg-muted rounded-md text-sm flex items-center"
-                              onClick={() => setIsOpen(false)}
-                            >
-                              <ChevronRight className="h-4 w-4 mr-2" />
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
 
-                {/* Mobile Theme Toggle */}
-                <div className="mt-6 pt-6 border-t">
+            <SheetContent
+              side="left"
+              className="
+                w-[300px]
+                p-0
+                border-r-0
+                bg-background/95
+                backdrop-blur
+                supports-[backdrop-filter]:bg-background/80
+              "
+            >
+              <SheetHeader className="p-4 border-b border-border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <img src={logo} alt="Logo" className="h-8 w-8" />
+                    <SheetTitle className="text-lg font-bold">
+                      {schoolName}
+                    </SheetTitle>
+                  </div>
+                  {/* Single close button, no "double X" */}
                   <Button
-                    variant="outline"
-                    className="w-full justify-between"
-                    onClick={() =>
-                      setTheme(theme === "dark" ? "light" : "dark")
-                    }
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                    className="h-10 w-10 p-1.5 hover:bg-muted rounded-full"
                   >
-                    <span>Theme</span>
-                    {theme === "dark" ? (
-                      <Sun className="h-5 w-5" />
-                    ) : (
-                      <Moon className="h-5 w-5" />
-                    )}
+                    <X className="h-8 w-8" />
                   </Button>
+                </div>
+              </SheetHeader>
+
+              {/* SCROLLABLE SHEET BODY */}
+              <div className="overflow-y-auto h-[calc(100vh-5rem)]">
+                <div className="p-4">
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full space-y-2"
+                  >
+                    {menuItems.map((menu, index) => (
+                      <AccordionItem
+                        key={index}
+                        value={`item-${index}`}
+                        className="border-none"
+                      >
+                        <AccordionTrigger className="text-base py-3 px-4 hover:no-underline hover:bg-muted rounded-md [&[data-state=open]]:bg-muted">
+                          {menu.title}
+                        </AccordionTrigger>
+                        <AccordionContent className="pb-2 pt-1">
+                          <div className="flex flex-col space-y-1">
+                            {menu.items.map((item, idx) => (
+                              <Link
+                                key={idx}
+                                to={item.href}
+                                className={`
+                                  px-4 py-2 rounded-md text-sm transition-colors
+                                  ${
+                                    location.pathname === item.href
+                                      ? "bg-primary text-primary-foreground"
+                                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                  }
+                                `}
+                                onClick={() => setIsOpen(false)}
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+
+                  {/* MOBILE ACTION BUTTONS */}
+                  <div className="mt-6 space-y-4">
+                    <Button
+                      variant="default"
+                      className="w-full justify-center"
+                      onClick={() => {
+                        navigate("/contact");
+                        setIsOpen(false);
+                      }}
+                    >
+                      Contact Us
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between"
+                      onClick={() =>
+                        setTheme(theme === "dark" ? "light" : "dark")
+                      }
+                    >
+                      <span>Theme</span>
+                      {theme === "dark" ? (
+                        <Sun className="h-5 w-5" />
+                      ) : (
+                        <Moon className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </SheetContent>

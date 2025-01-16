@@ -14,8 +14,11 @@ const NewsPage = () => {
       />
       <Header />
       <main className="pt-20">
-        <div className="container mx-auto px-4 py-16">
-          <h1 className="text-4xl font-bold mb-8">News & Events</h1>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-4xl font-bold mb-4">News & Events</h1>
+          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Stay updated with the latest news and events from our school
+          </p>
           <NewsSection showAll />
         </div>
       </main>
