@@ -134,12 +134,20 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5" />
             ) : (
               <Moon className="h-5 w-5" />
             )}
+            <span className="sr-only">
+              {theme === "dark"
+                ? "Switch to light mode"
+                : "Switch to dark mode"}
+            </span>
           </Button>
           <Button variant="outline" onClick={() => navigate("/contact")}>
             Contact Us
@@ -154,8 +162,10 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
                 variant="ghost"
                 size="icon"
                 className="hover:bg-transparent"
+                aria-label="Open navigation menu"
               >
                 <Menu className="h-6 w-6" />
+                <span className="sr-only">Open navigation menu</span>
               </Button>
             </SheetTrigger>
 
@@ -184,8 +194,10 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
                     size="icon"
                     onClick={() => setIsOpen(false)}
                     className="h-10 w-10 p-1.5 hover:bg-muted rounded-full"
+                    aria-label="Close navigation menu"
                   >
                     <X className="h-8 w-8" />
+                    <span className="sr-only">Close navigation menu</span>
                   </Button>
                 </div>
               </SheetHeader>
@@ -251,6 +263,11 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
                       onClick={() =>
                         setTheme(theme === "dark" ? "light" : "dark")
                       }
+                      aria-label={
+                        theme === "dark"
+                          ? "Switch to light mode"
+                          : "Switch to dark mode"
+                      }
                     >
                       <span>Theme</span>
                       {theme === "dark" ? (
@@ -258,6 +275,11 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
                       ) : (
                         <Moon className="h-5 w-5" />
                       )}
+                      <span className="sr-only">
+                        {theme === "dark"
+                          ? "Switch to light mode"
+                          : "Switch to dark mode"}
+                      </span>
                     </Button>
                   </div>
                 </div>

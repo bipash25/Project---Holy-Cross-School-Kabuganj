@@ -19,6 +19,17 @@ export default defineConfig({
   optimizeDeps: {
     entries: ["src/main.tsx", "src/tempobook/**/*"],
   },
+  server: {
+    https: true,
+    proxy: {
+      "/ws": {
+        target: "wss://exciting-germain1-xclt8.dev.tempolabs.ai",
+        ws: true,
+        secure: true,
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     react({
       plugins: conditionalPlugins,
