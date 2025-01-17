@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://exciting-germain1-xclt8.dev.tempolabs.ai/sitemap.xml

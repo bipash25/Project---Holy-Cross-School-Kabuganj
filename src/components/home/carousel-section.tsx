@@ -9,6 +9,7 @@ import {
 } from "../ui/carousel";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import { Image } from "../ui/image";
 
 interface CarouselSectionProps {
   images: string[];
@@ -25,7 +26,7 @@ const CarouselSection = ({ images }: CarouselSectionProps) => {
   useEffect(() => {
     const preloadImages = () => {
       images.forEach((src) => {
-        const img = new Image();
+        const img = new window.Image();
         img.src = src;
         img.onload = () => {
           setImagesLoaded((prev) => ({ ...prev, [src]: true }));
@@ -63,10 +64,12 @@ const CarouselSection = ({ images }: CarouselSectionProps) => {
         {images.map((image, index) => (
           <CarouselItem key={index}>
             <div className="relative w-full h-[85vh]">
-              <img
+              <Image
                 src={image}
                 alt={`School showcase ${index + 1}`}
                 className="w-full h-full object-cover"
+                lowQuality={true}
+                priority={index === 0} // Only the first image gets priority loading
               />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
                 <div className="text-center text-white">
