@@ -1,40 +1,26 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import { tempo } from "tempo-devtools/dist/vite";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
 import { splitVendorChunkPlugin } from "vite";
 
-const conditionalPlugins: [string, Record<string, any>][] = [];
-
-// @ts-ignore
-if (process.env.TEMPO === "true") {
+const conditionalPlugins = [];
+if (process.env.TEMPO) {
   conditionalPlugins.push(["tempo-devtools/swc", {}]);
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
-  optimizeDeps: {
-    entries: ["src/main.tsx", "src/tempobook/**/*"],
-  },
   server: {
     port: 3000,
     host: true,
-    proxy: {
-      "/ws": {
-        target: "wss://exciting-germain1-xclt8.dev.tempolabs.ai",
-        ws: true,
-        changeOrigin: true,
-      },
-    },
   },
   plugins: [
     react({
-      plugins: conditionalPlugins,
+      plugins: [...conditionalPlugins],
     }),
-    tempo(),
     imagetools(),
     splitVendorChunkPlugin(),
     VitePWA({
@@ -60,7 +46,6 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    preserveSymlinks: true,
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
