@@ -20,12 +20,12 @@ export default defineConfig({
     entries: ["src/main.tsx", "src/tempobook/**/*"],
   },
   server: {
-    https: true,
+    port: 3000,
+    host: true,
     proxy: {
       "/ws": {
         target: "wss://exciting-germain1-xclt8.dev.tempolabs.ai",
         ws: true,
-        secure: true,
         changeOrigin: true,
       },
     },
