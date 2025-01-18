@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Facebook,
   Instagram,
@@ -8,126 +9,107 @@ import {
 } from "lucide-react";
 import { Button } from "../ui/button";
 
-interface FooterProps {
-  schoolName?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
-
-const Footer = ({
-  schoolName = "Holy Cross School Kabuganj",
-  address = "MVG5+XXP, Kabuganj, Assam - 788121",
-  phone = "+91 6000632897",
-  email = "hcskabuganj@gmail.com",
-}: FooterProps) => {
+const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
-      <div className="container mx-auto px-4 py-8 sm:py-12">
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* School Info */}
-          <div className="text-center sm:text-left">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
-              {schoolName}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4">
+              Holy Cross School
             </h3>
-            <div className="space-y-2 text-sm sm:text-base">
-              <p className="flex items-center justify-center sm:justify-start">
+            <div className="space-y-2">
+              <p className="flex items-center">
                 <MapPin className="h-4 w-4 mr-2" />
-                {address}
+                Kabuganj, Assam - 784172
               </p>
-              <p className="flex items-center justify-center sm:justify-start">
+              <p className="flex items-center">
                 <Phone className="h-4 w-4 mr-2" />
-                {phone}
+                +91 1234567890
               </p>
-              <p className="flex items-center justify-center sm:justify-start">
+              <p className="flex items-center">
                 <Mail className="h-4 w-4 mr-2" />
-                {email}
+                info@hcsk.edu.in
               </p>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="text-center sm:text-left">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
-              Quick Links
-            </h3>
-            <ul className="space-y-2 text-sm sm:text-base">
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4">Quick Links</h3>
+            <ul className="space-y-2">
               <li>
-                <a href="/about" className="hover:text-white transition-colors">
+                <Link
+                  to="/about"
+                  className="hover:text-white transition-colors"
+                >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/academics"
+                <Link
+                  to="/academics"
                   className="hover:text-white transition-colors"
                 >
                   Academics
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/facilities"
+                <Link
+                  to="/facilities"
                   className="hover:text-white transition-colors"
                 >
                   Facilities
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/contact"
+                <Link
+                  to="/contact"
                   className="hover:text-white transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Important Information */}
-          <div className="text-center sm:text-left">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
+          {/* Important Info */}
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4">
               Important Info
             </h3>
-            <ul className="space-y-2 text-sm sm:text-base">
+            <ul className="space-y-2">
               <li>
-                <a
-                  href="/admission"
+                <Link
+                  to="/academics/admissions"
                   className="hover:text-white transition-colors"
                 >
                   Admission Process
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/calendar"
+                <Link
+                  to="/info/fees"
                   className="hover:text-white transition-colors"
                 >
-                  Academic Calendar
-                </a>
+                  Fee Structure
+                </Link>
               </li>
               <li>
-                <a href="/news" className="hover:text-white transition-colors">
+                <Link to="/news" className="hover:text-white transition-colors">
                   News & Events
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/gallery"
-                  className="hover:text-white transition-colors"
-                >
-                  Photo Gallery
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Social Media */}
-          <div className="text-center sm:text-left">
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
+          <div>
+            <h3 className="text-lg font-bold text-white mb-4">
               Connect With Us
             </h3>
-            <div className="flex space-x-4 justify-center sm:justify-start">
+            <div className="flex space-x-4">
               <Button variant="ghost" size="icon" className="hover:text-white">
                 <Facebook className="h-5 w-5" />
               </Button>
@@ -141,9 +123,10 @@ const Footer = ({
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6 sm:pt-8 text-center text-sm sm:text-base">
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p>
-            &copy; {new Date().getFullYear()} {schoolName}. All rights reserved.
+            © {new Date().getFullYear()} Holy Cross School Kabuganj. All rights
+            reserved.
           </p>
         </div>
       </div>

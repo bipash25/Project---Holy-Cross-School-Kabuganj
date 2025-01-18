@@ -1,341 +1,156 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import AdminLayout from "../layout/AdminLayout";
 import { Card } from "../../ui/card";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
-import { useToast } from "../../ui/use-toast";
-import { Plus, Trash2, FileText, Edit } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../ui/dialog";
-import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { useToast } from "../../ui/use-toast";
+import { ColorPicker } from "../../ui/color-picker";
+import { LinkEditor } from "../../ui/link-editor";
+import { IconPicker } from "../../ui/icon-picker";
+import { EditableContent } from "../../ui/editable-content";
+import * as Icons from "lucide-react";
 
-interface PageContent {
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  section: string;
-  last_updated: string;
+// ... (previous imports and interfaces)
+
+interface ContentTypeConfig {
+  label: string;
+  icon: keyof typeof Icons;
+  editor: React.ComponentType<any>;
+  preview: React.ComponentType<any>;
 }
 
+const contentTypes: Record<string, ContentTypeConfig> = {
+  text: {
+    label: "Text",
+    icon: "Type",
+    editor: Input,
+    preview: ({ value }) => <span>{value}</span>,
+  },
+  richtext: {
+    label: "Rich Text",
+    icon: "FileText",
+    editor: Textarea,
+    preview: ({ value }) => <div className="prose">{value}</div>,
+  },
+  image: {
+    label: "Image",
+    icon: "Image",
+    editor: ImageUpload,
+    preview: ({ value }) => (
+      <img src={value} alt="Preview" className="max-w-full h-auto" />
+    ),
+  },
+  list: {
+    label: "List",
+    icon: "List",
+    editor: ListEditor,
+    preview: ({ value }) => (
+      <ul className="list-disc pl-4">
+        {value.map((item: string, i: number) => (
+          <li key={i}>{item}</li>
+        ))}
+      </ul>
+    ),
+  },
+  link: {
+    label: "Link",
+    icon: "Link",
+    editor: LinkEditor,
+    preview: ({ value }) => (
+      <a href={value.url} className="text-blue-500 hover:underline">
+        {value.text}
+      </a>
+    ),
+  },
+  color: {
+    label: "Color",
+    icon: "Palette",
+    editor: ColorPicker,
+    preview: ({ value }) => (
+      <div
+        className="w-6 h-6 rounded-full"
+        style={{ backgroundColor: value }}
+      />
+    ),
+  },
+};
+
 const ContentManager = () => {
-  const { toast } = useToast();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [pages, setPages] = useState<PageContent[]>([]);
-  const [editingPage, setEditingPage] = useState<PageContent | null>(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    slug: "",
-    section: "about",
-  });
+  // ... (previous state and handlers)
 
-  useEffect(() => {
-    loadPages();
-  }, []);
+  const renderContentEditor = (content: EditableContent) => {
+    const typeConfig = contentTypes[content.type];
+    if (!typeConfig) return null;
 
-  const loadPages = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("pages")
-        .select("*")
-        .order("title");
+    const EditorComponent = typeConfig.editor;
+    const Icon = Icons[typeConfig.icon];
 
-      if (error) throw error;
-      setPages(data || []);
-    } catch (error) {
-      console.error("Error loading pages:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load pages",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (editingPage) {
-        const { error } = await supabase
-          .from("pages")
-          .update({
-            ...formData,
-            last_updated: new Date().toISOString(),
-          })
-          .eq("id", editingPage.id);
-
-        if (error) throw error;
-
-        toast({
-          title: "Success",
-          description: "Page has been updated successfully",
-        });
-      } else {
-        const { error } = await supabase.from("pages").insert([
-          {
-            ...formData,
-            last_updated: new Date().toISOString(),
-          },
-        ]);
-
-        if (error) throw error;
-
-        toast({
-          title: "Success",
-          description: "Page has been added successfully",
-        });
-      }
-
-      setIsDialogOpen(false);
-      setFormData({
-        title: "",
-        content: "",
-        slug: "",
-        section: "about",
-      });
-      setEditingPage(null);
-      loadPages();
-    } catch (error) {
-      console.error("Error saving page:", error);
-      toast({
-        title: "Error",
-        description: "Failed to save page",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEdit = (page: PageContent) => {
-    setEditingPage(page);
-    setFormData({
-      title: page.title,
-      content: page.content,
-      slug: page.slug,
-      section: page.section,
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this page?")) return;
-
-    try {
-      const { error } = await supabase.from("pages").delete().eq("id", id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Page has been deleted successfully",
-      });
-      loadPages();
-    } catch (error) {
-      console.error("Error deleting page:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete page",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const sections = [
-    { value: "about", label: "About" },
-    { value: "academics", label: "Academics" },
-    { value: "facilities", label: "Facilities" },
-    { value: "info", label: "School Info" },
-  ];
-
-  const filteredPages = (section: string) =>
-    pages.filter((page) => page.section === section);
-
-  return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold">Content Manager</h1>
-            <p className="text-muted-foreground">
-              Manage website pages and content
-            </p>
-          </div>
-
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" /> Add Page
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingPage ? "Edit Page" : "Add New Page"}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Title</Label>
-                    <Input
-                      value={formData.title}
-                      onChange={(e) =>
-                        setFormData({ ...formData, title: e.target.value })
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Slug</Label>
-                    <Input
-                      value={formData.slug}
-                      onChange={(e) =>
-                        setFormData({ ...formData, slug: e.target.value })
-                      }
-                      required
-                      placeholder="e.g., about-us"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Section</Label>
-                  <select
-                    value={formData.section}
-                    onChange={(e) =>
-                      setFormData({ ...formData, section: e.target.value })
-                    }
-                    className="w-full rounded-md border border-input bg-background px-3 py-2"
-                    required
-                  >
-                    {sections.map((section) => (
-                      <option key={section.value} value={section.value}>
-                        {section.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Content</Label>
-                  <Textarea
-                    value={formData.content}
-                    onChange={(e) =>
-                      setFormData({ ...formData, content: e.target.value })
-                    }
-                    required
-                    className="min-h-[200px]"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setIsDialogOpen(false);
-                      setEditingPage(null);
-                      setFormData({
-                        title: "",
-                        content: "",
-                        slug: "",
-                        section: "about",
-                      });
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading
-                      ? editingPage
-                        ? "Updating..."
-                        : "Adding..."
-                      : editingPage
-                        ? "Update Page"
-                        : "Add Page"}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Icon className="h-4 w-4" />
+          <Label>{content.label}</Label>
         </div>
-
-        <Tabs defaultValue="about" className="w-full">
-          <TabsList>
-            {sections.map((section) => (
-              <TabsTrigger key={section.value} value={section.value}>
-                {section.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {sections.map((section) => (
-            <TabsContent key={section.value} value={section.value}>
-              <div className="grid gap-4">
-                {filteredPages(section.value).length === 0 ? (
-                  <Card className="p-8 text-center">
-                    <p className="text-muted-foreground">
-                      No pages found in this section
-                    </p>
-                  </Card>
-                ) : (
-                  filteredPages(section.value).map((page) => (
-                    <Card key={page.id} className="p-6">
-                      <div className="flex justify-between items-start gap-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-blue-600" />
-                            <h3 className="font-semibold">{page.title}</h3>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            /{page.slug}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Last updated:{" "}
-                            {new Date(page.last_updated).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(page)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(page.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+        <EditorComponent
+          value={content.defaultValue}
+          onChange={(value: any) => handleContentChange(content, value)}
+        />
       </div>
-    </AdminLayout>
-  );
+    );
+  };
+
+  const renderLayoutPreview = (layout: LayoutSection) => {
+    return (
+      <div className="relative border-2 border-dashed border-muted-foreground/20 p-4 rounded-lg">
+        <div
+          className={cn(
+            "grid gap-4",
+            layout.type === "row" ? "grid-flow-col" : "grid-flow-row",
+            `grid-cols-${layout.columns || 1}`,
+          )}
+        >
+          {layout.children.map((child, index) => (
+            <div
+              key={index}
+              className={cn(
+                "p-4 bg-muted rounded-lg",
+                "hover:outline hover:outline-2 hover:outline-blue-500/50",
+              )}
+            >
+              {typeof child === "string" ? (
+                <EditableContent
+                  id={child}
+                  type={getContentType(child)}
+                  preview
+                >
+                  {renderContentPreview(child)}
+                </EditableContent>
+              ) : (
+                renderLayoutPreview(child)
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="absolute -top-3 left-4 px-2 bg-background text-xs text-muted-foreground">
+          {layout.type === "row" ? "Row" : "Column"}
+        </div>
+      </div>
+    );
+  };
+
+  const renderContentPreview = (contentId: string) => {
+    const content = findContent(contentId);
+    if (!content) return null;
+
+    const typeConfig = contentTypes[content.type];
+    if (!typeConfig) return null;
+
+    const PreviewComponent = typeConfig.preview;
+    return <PreviewComponent value={content.defaultValue} />;
+  };
+
+  // ... (rest of the component)
 };
 
 export default ContentManager;

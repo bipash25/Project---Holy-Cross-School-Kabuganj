@@ -11,11 +11,6 @@ import {
   Calculator,
   Phone,
   GraduationCap,
-  ArrowRight,
-  Trophy,
-  Medal,
-  Award,
-  Star,
 } from "lucide-react";
 import { BackToTop } from "./ui/back-to-top";
 import { ErrorBoundary } from "./ui/error-boundary";
@@ -25,33 +20,6 @@ import NewsSection from "./home/news-section";
 import slider1 from "@/assets/images/slider1.jpg";
 import slider2 from "@/assets/images/slider2.jpg";
 import slider5 from "@/assets/images/slider5.jpg";
-
-const achievements = [
-  {
-    icon: <Trophy className="h-12 w-12 text-yellow-500" />,
-    title: "Academic Excellence",
-    description: "Consistently achieving 95%+ pass rate in board examinations",
-    stats: "15+ District Toppers",
-  },
-  {
-    icon: <Medal className="h-12 w-12 text-blue-500" />,
-    title: "Sports Champions",
-    description: "Multiple district and state level sports achievements",
-    stats: "100+ Sports Medals",
-  },
-  {
-    icon: <Award className="h-12 w-12 text-purple-500" />,
-    title: "Cultural Achievements",
-    description: "Winners in various cultural competitions and events",
-    stats: "45+ Cultural Awards",
-  },
-  {
-    icon: <Star className="h-12 w-12 text-green-500" />,
-    title: "Innovation & Research",
-    description: "Excellence in science fairs and innovation challenges",
-    stats: "25+ Science Fair Wins",
-  },
-];
 
 const Home = () => {
   const navigate = useNavigate();
@@ -160,86 +128,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Achievements Section */}
-        <section className="py-16 bg-gradient-to-b from-background to-muted">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Our Achievements
-              </h2>
-              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Celebrating excellence in academics, sports, and co-curricular
-                activities
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {achievements.map((achievement, index) => (
-                <Card
-                  key={index}
-                  className="p-6 text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="p-3 rounded-full bg-muted">
-                      {achievement.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold">
-                      {achievement.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {achievement.description}
-                    </p>
-                    <div className="mt-4 text-2xl font-bold text-blue-600 dark:text-blue-400">
-                      {achievement.stats}
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Button
-                onClick={() => navigate("/about/statistics")}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                View All Achievements <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Statistics Section */}
-        <section className="bg-blue-600 text-white py-8 sm:py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-              <div>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-                  15+
-                </h3>
-                <p className="text-sm sm:text-base">Years of Excellence</p>
-              </div>
-              <div>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-                  1000+
-                </h3>
-                <p className="text-sm sm:text-base">Students</p>
-              </div>
-              <div>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-                  100+
-                </h3>
-                <p className="text-sm sm:text-base">Expert Faculty</p>
-              </div>
-              <div>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-                  95%
-                </h3>
-                <p className="text-sm sm:text-base">Success Rate</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* News & Events Section */}
         <section className="py-12 bg-muted">
           <div className="container mx-auto px-4">
@@ -250,7 +138,7 @@ const Home = () => {
                 onClick={() => navigate("/news")}
                 className="hidden sm:flex items-center"
               >
-                View All <ArrowRight className="ml-2 h-4 w-4" />
+                View All <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
 

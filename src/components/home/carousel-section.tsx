@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
-import { Image } from "../ui/image";
 
 interface CarouselSectionProps {
   images: string[];
@@ -21,6 +13,7 @@ interface ImageLoadingState {
 
 const CarouselSection = ({ images }: CarouselSectionProps) => {
   const navigate = useNavigate();
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState<ImageLoadingState>({});
 
   useEffect(() => {
@@ -31,14 +24,19 @@ const CarouselSection = ({ images }: CarouselSectionProps) => {
         img.onload = () => {
           setImagesLoaded((prev) => ({ ...prev, [src]: true }));
         };
-        img.onerror = () => {
-          throw new Error(`Failed to load image: ${src}`);
-        };
       });
     };
 
     preloadImages();
   }, [images]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [images.length]);
 
   const CarouselSkeleton = () => (
     <div className="w-full h-[85vh] bg-muted animate-pulse relative">
@@ -59,42 +57,40 @@ const CarouselSection = ({ images }: CarouselSectionProps) => {
   }
 
   return (
-    <Carousel className="w-full h-full">
-      <CarouselContent>
-        {images.map((image, index) => (
-          <CarouselItem key={index}>
-            <div className="relative w-full h-[85vh]">
-              <Image
-                src={image}
-                alt={`School showcase ${index + 1}`}
-                className="w-full h-full object-cover"
-                lowQuality={true}
-                priority={index === 0} // Only the first image gets priority loading
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                <div className="text-center text-white">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-                    Welcome to Holy Cross School
-                  </h1>
-                  <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8">
-                    Nurturing minds, Building futures
-                  </p>
-                  <Button
-                    size="lg"
-                    className="bg-blue-600 hover:bg-blue-700"
-                    onClick={() => navigate("/about")}
-                  >
-                    Learn More
-                  </Button>
-                </div>
-              </div>
+    <div className="relative w-full h-[85vh] overflow-hidden">
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={`
+            absolute inset-0 transition-opacity duration-1000
+            ${index === currentIndex ? "opacity-100" : "opacity-0"}
+          `}
+        >
+          <img
+            src={image}
+            alt={`School showcase ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="text-center text-white">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+                Welcome to Holy Cross School
+              </h1>
+              <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8">
+                Nurturing minds, Building futures
+              </p>
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => navigate("/about")}
+              >
+                Learn More
+              </Button>
             </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-4" />
-      <CarouselNext className="right-4" />
-    </Carousel>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 
