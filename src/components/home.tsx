@@ -35,7 +35,6 @@ const Home = () => {
       />
       <BackToTop />
       <Header />
-
       <main className="pt-20">
         {/* Hero Carousel Section */}
         <section className="w-full h-[85vh] relative">
@@ -133,8 +132,8 @@ const Home = () => {
           <HomeNewsSection />
         </ErrorBoundary>
       </main>
-
       <Footer />
+      <div className="w-[800px] h-[600px]"></div>
     </div>
   );
 };

@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../ui/navigation-menu";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -16,12 +14,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Menu, X } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { useTheme } from "../theme-provider";
+import schoolLogo from "@/assets/logo.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
 
   const menuItems = [
     {
@@ -63,52 +70,72 @@ const Header = () => {
   ];
 
   return (
-    <header className="w-full h-20 bg-background border-b border-border fixed top-0 left-0 z-50">
-      <div className="container mx-auto px-4 h-full flex items-center">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2">
+    <header className="fixed top-0 left-0 right-0 h-20 bg-background border-b border-border z-50">
+      <div className="container mx-auto px-4 h-full flex items-center justify-between">
+        {/* Logo & School Name */}
+        <Link to="/" className="flex items-center space-x-3">
+          <img src={schoolLogo} alt="HCSK Logo" className="h-12 w-auto" />
           <span className="text-xl font-bold">HCSK</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex flex-1 justify-center">
-          <NavigationMenu>
-            <NavigationMenuList>
-              {menuItems.map((menu) => (
-                <NavigationMenuItem key={menu.title}>
-                  <NavigationMenuTrigger>{menu.title}</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-4 w-[400px]">
-                      {menu.items.map((item) => (
-                        <NavigationMenuLink key={item.href} asChild>
-                          <Link
-                            to={item.href}
-                            className="block p-2 hover:bg-muted rounded-md"
-                          >
-                            {item.label}
-                          </Link>
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-
-        {/* Desktop Contact Button */}
-        <div className="hidden lg:block">
+        <div className="hidden lg:flex items-center space-x-8">
+          <nav className="flex items-center space-x-6">
+            {menuItems.map((menu) => (
+              <DropdownMenu key={menu.title}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-base font-medium">
+                    {menu.title}
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {menu.items.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        to={item.href}
+                        className={`w-full py-2 ${location.pathname === item.href ? "bg-accent" : "hover:bg-accent/50"}`}
+                      >
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ))}
+          </nav>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
           <Button variant="outline" onClick={() => navigate("/contact")}>
             Contact Us
           </Button>
         </div>
 
         {/* Mobile Menu */}
-        <div className="lg:hidden ml-auto">
+        <div className="flex lg:hidden items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Menu">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
@@ -125,32 +152,35 @@ const Header = () => {
                   </Button>
                 </div>
               </SheetHeader>
-              <div className="py-4">
-                {menuItems.map((menu) => (
-                  <div key={menu.title} className="px-4">
-                    <h3 className="mb-2 font-semibold">{menu.title}</h3>
-                    <div className="space-y-2">
-                      {menu.items.map((item) => (
-                        <Link
-                          key={item.href}
-                          to={item.href}
-                          className={`
-                            block p-2 rounded-md text-sm
-                            ${
-                              location.pathname === item.href
-                                ? "bg-primary text-primary-foreground"
-                                : "hover:bg-muted"
-                            }
-                          `}
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                <div className="px-4 mt-4">
+              <div className="py-4 overflow-y-auto">
+                <Accordion type="single" collapsible className="w-full">
+                  {menuItems.map((menu, index) => (
+                    <AccordionItem
+                      value={`item-${index}`}
+                      key={menu.title}
+                      className="border-b last:border-none"
+                    >
+                      <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted text-center">
+                        {menu.title}
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-2">
+                        <div className="space-y-1">
+                          {menu.items.map((item) => (
+                            <Link
+                              key={item.href}
+                              to={item.href}
+                              className={`block px-6 py-2 text-center transition-colors ${location.pathname === item.href ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"}`}
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+                <div className="px-6 py-4 border-t">
                   <Button
                     className="w-full"
                     onClick={() => {
