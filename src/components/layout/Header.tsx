@@ -1,17 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logo from "@/assets/logo.png";
-
-// shadcn/ui or your own UI library imports
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../ui/navigation-menu";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
@@ -19,26 +14,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Moon, Sun, Menu, X } from "lucide-react";
-import { useTheme } from "../theme-provider";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
+import { useTheme } from "../theme-provider";
+import schoolLogo from "@/assets/logo.png";
 
-interface HeaderProps {
-  schoolName?: string;
-}
-
-const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
-  const { theme, setTheme } = useTheme();
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
 
-  // Menu items for both desktop & mobile
   const menuItems = [
     {
       title: "About Us",
@@ -79,209 +70,130 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
   ];
 
   return (
-    <header className="w-full h-20 bg-background border-b border-border fixed top-0 left-0 z-50">
-      <div className="container mx-auto px-4 h-full flex items-center">
-        {/* LOGO + SCHOOL NAME */}
-        <Link
-          to="/"
-          className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
-        >
-          <img
-            src={logo}
-            alt="School Logo"
-            className="h-12 w-12 object-contain"
-          />
-          {/* Full name on larger screens, short on smaller */}
-          <span className="text-xl font-bold text-foreground hidden sm:inline">
-            {schoolName}
-          </span>
-          <span className="text-xl font-bold text-foreground sm:hidden">
-            HCSK
-          </span>
+    <header className="fixed top-0 left-0 right-0 h-20 bg-background border-b border-border z-50 w-full">
+      <div className="w-full max-w-[1400px] mx-auto px-4 h-full flex items-center justify-between">
+        {/* Logo & School Name */}
+        <Link to="/" className="flex items-center space-x-3">
+          <img src={schoolLogo} alt="HCSK Logo" className="h-12 w-auto" />
+          <span className="text-xl font-bold">HCSK</span>
         </Link>
 
-        {/* DESKTOP NAVIGATION */}
-        <div className="hidden lg:flex flex-1 justify-center">
-          <NavigationMenu>
-            <NavigationMenuList>
-              {menuItems.map((menu) => (
-                <NavigationMenuItem key={menu.title}>
-                  <NavigationMenuTrigger className="text-base">
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center justify-center flex-1 px-8">
+          <nav className="flex items-center space-x-6">
+            {menuItems.map((menu) => (
+              <DropdownMenu key={menu.title}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-base font-medium">
                     {menu.title}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-4 w-[400px]">
-                      {menu.items.map((item) => (
-                        <NavigationMenuLink
-                          key={item.href}
-                          href={item.href}
-                          className="block p-2 hover:bg-muted rounded-md"
-                        >
-                          {item.label}
-                        </NavigationMenuLink>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {menu.items.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        to={item.href}
+                        className={`w-full py-2 ${location.pathname === item.href ? "bg-accent" : "hover:bg-accent/50"}`}
+                      >
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ))}
+          </nav>
         </div>
 
-        {/* DESKTOP THEME & CONTACT BUTTONS */}
-        <div className="hidden lg:flex items-center space-x-2">
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center space-x-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label={
-              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-            }
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5" />
             ) : (
               <Moon className="h-5 w-5" />
             )}
-            <span className="sr-only">
-              {theme === "dark"
-                ? "Switch to light mode"
-                : "Switch to dark mode"}
-            </span>
           </Button>
           <Button variant="outline" onClick={() => navigate("/contact")}>
             Contact Us
           </Button>
         </div>
 
-        {/* MOBILE NAVIGATION (Hamburger) */}
-        <div className="lg:hidden ml-auto">
+        {/* Mobile Menu */}
+        <div className="flex lg:hidden items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-transparent"
-                aria-label="Open navigation menu"
-              >
+              <Button variant="ghost" size="icon" aria-label="Menu">
                 <Menu className="h-6 w-6" />
-                <span className="sr-only">Open navigation menu</span>
               </Button>
             </SheetTrigger>
-
-            <SheetContent
-              side="left"
-              className="
-                w-[300px]
-                p-0
-                border-r-0
-                bg-background/95
-                backdrop-blur
-                supports-[backdrop-filter]:bg-background/80
-              "
-            >
-              <SheetHeader className="p-4 border-b border-border">
+            <SheetContent side="left" className="w-[300px] p-0">
+              <SheetHeader className="p-4 border-b">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <img src={logo} alt="Logo" className="h-8 w-8" />
-                    <SheetTitle className="text-lg font-bold">
-                      {schoolName}
-                    </SheetTitle>
-                  </div>
-                  {/* Single close button, no "double X" */}
+                  <SheetTitle>Menu</SheetTitle>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(false)}
-                    className="h-10 w-10 p-1.5 hover:bg-muted rounded-full"
-                    aria-label="Close navigation menu"
                   >
-                    <X className="h-8 w-8" />
-                    <span className="sr-only">Close navigation menu</span>
+                    <X className="h-6 w-6" />
                   </Button>
                 </div>
               </SheetHeader>
-
-              {/* SCROLLABLE SHEET BODY */}
-              <div className="overflow-y-auto h-[calc(100vh-5rem)]">
-                <div className="p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="w-full space-y-2"
+              <div className="py-4 overflow-y-auto">
+                <Accordion type="single" collapsible className="w-full">
+                  {menuItems.map((menu, index) => (
+                    <AccordionItem
+                      value={`item-${index}`}
+                      key={menu.title}
+                      className="border-b last:border-none"
+                    >
+                      <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted text-center">
+                        {menu.title}
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-2">
+                        <div className="space-y-1">
+                          {menu.items.map((item) => (
+                            <Link
+                              key={item.href}
+                              to={item.href}
+                              className={`block px-6 py-2 text-center transition-colors ${location.pathname === item.href ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"}`}
+                              onClick={() => setIsOpen(false)}
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+                <div className="px-6 py-4 border-t">
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      navigate("/contact");
+                      setIsOpen(false);
+                    }}
                   >
-                    {menuItems.map((menu, index) => (
-                      <AccordionItem
-                        key={index}
-                        value={`item-${index}`}
-                        className="border-none"
-                      >
-                        <AccordionTrigger className="text-base py-3 px-4 hover:no-underline hover:bg-muted rounded-md [&[data-state=open]]:bg-muted">
-                          {menu.title}
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-2 pt-1">
-                          <div className="flex flex-col space-y-1">
-                            {menu.items.map((item, idx) => (
-                              <Link
-                                key={idx}
-                                to={item.href}
-                                className={`
-                                  px-4 py-2 rounded-md text-sm transition-colors
-                                  ${
-                                    location.pathname === item.href
-                                      ? "bg-primary text-primary-foreground"
-                                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                                  }
-                                `}
-                                onClick={() => setIsOpen(false)}
-                              >
-                                {item.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-
-                  {/* MOBILE ACTION BUTTONS */}
-                  <div className="mt-6 space-y-4">
-                    <Button
-                      variant="default"
-                      className="w-full justify-center"
-                      onClick={() => {
-                        navigate("/contact");
-                        setIsOpen(false);
-                      }}
-                    >
-                      Contact Us
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className="w-full justify-between"
-                      onClick={() =>
-                        setTheme(theme === "dark" ? "light" : "dark")
-                      }
-                      aria-label={
-                        theme === "dark"
-                          ? "Switch to light mode"
-                          : "Switch to dark mode"
-                      }
-                    >
-                      <span>Theme</span>
-                      {theme === "dark" ? (
-                        <Sun className="h-5 w-5" />
-                      ) : (
-                        <Moon className="h-5 w-5" />
-                      )}
-                      <span className="sr-only">
-                        {theme === "dark"
-                          ? "Switch to light mode"
-                          : "Switch to dark mode"}
-                      </span>
-                    </Button>
-                  </div>
+                    Contact Us
+                  </Button>
                 </div>
               </div>
             </SheetContent>

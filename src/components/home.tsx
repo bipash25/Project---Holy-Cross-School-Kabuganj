@@ -26,7 +26,7 @@ const Home = () => {
   const carouselImages = [slider1, slider2, slider5];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full">
       <SEO
         title="Home"
         description="Welcome to Holy Cross School Kabuganj. We provide quality education and nurture young minds for a better future."
@@ -35,7 +35,7 @@ const Home = () => {
       />
       <BackToTop />
       <Header />
-      <main className="pt-20">
+      <main className="pt-20 w-full">
         {/* Hero Carousel Section */}
         <section className="w-full h-[85vh] relative">
           <ErrorBoundary section="Hero Carousel">
@@ -133,7 +133,6 @@ const Home = () => {
         </ErrorBoundary>
       </main>
       <Footer />
-      <div className="w-[800px] h-[600px]"></div>
     </div>
   );
 };

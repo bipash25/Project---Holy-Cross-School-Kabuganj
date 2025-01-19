@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Base HTML and Body styles */
+html,
+body {
+  width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
 /* Custom Scrollbar */
 @layer base {
   ::-webkit-scrollbar {
