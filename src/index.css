@@ -5,9 +5,57 @@
 /* Base HTML and Body styles */
 html,
 body {
-  width: 100%;
-  min-width: 320px;
+  width: 100vw;
+  min-width: 100vw;
+  max-width: 100vw;
   overflow-x: hidden;
+}
+
+/* Container width for all screen sizes */
+@layer components {
+  .container {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @screen sm {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
+
+  @screen md {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
+
+  @screen lg {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
+
+  @screen xl {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
+
+  @screen 2xl {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
+    }
+  }
 }
 
 /* Custom Scrollbar */
@@ -43,17 +91,23 @@ body {
 @layer base {
   html {
     font-size: 14px;
+    width: 100vw;
+    max-width: 100vw;
   }
 
   @screen sm {
     html {
       font-size: 15px;
+      width: 100vw;
+      max-width: 100vw;
     }
   }
 
   @screen lg {
     html {
       font-size: 16px;
+      width: 100vw;
+      max-width: 100vw;
     }
   }
 
@@ -140,5 +194,8 @@ body {
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 }

@@ -54,7 +54,7 @@ function App() {
     <AuthProvider>
       <Suspense
         fallback={
-          <div className="h-screen w-screen flex items-center justify-center">
+          <div className="h-[100vh] w-[100vw] flex items-center justify-center">
             Loading...
           </div>
         }
@@ -99,11 +99,11 @@ function App() {
 
           {/* Admin Routes */}
           <Route
-            path="/management-portal-hcsk-x8k9z2/login"
+            path="/management-portal-hcsk/login"
             element={<AdminLogin />}
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/dashboard"
+            path="/management-portal-hcsk/dashboard"
             element={
               <ProtectedRoute>
                 <AdminDashboard />
@@ -111,7 +111,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/news"
+            path="/management-portal-hcsk/news"
             element={
               <ProtectedRoute>
                 <NewsManager />
@@ -119,7 +119,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/media"
+            path="/management-portal-hcsk/media"
             element={
               <ProtectedRoute>
                 <MediaManager />
@@ -127,7 +127,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/students"
+            path="/management-portal-hcsk/students"
             element={
               <ProtectedRoute>
                 <StudentsManager />
@@ -135,7 +135,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/achievements"
+            path="/management-portal-hcsk/achievements"
             element={
               <ProtectedRoute>
                 <AchievementsManager />
@@ -143,7 +143,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/academics"
+            path="/management-portal-hcsk/academics"
             element={
               <ProtectedRoute>
                 <AcademicsManager />
@@ -151,7 +151,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/calendar"
+            path="/management-portal-hcsk/calendar"
             element={
               <ProtectedRoute>
                 <CalendarManager />
@@ -159,7 +159,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/content"
+            path="/management-portal-hcsk/content"
             element={
               <ProtectedRoute>
                 <ContentManager />
@@ -167,7 +167,7 @@ function App() {
             }
           />
           <Route
-            path="/management-portal-hcsk-x8k9z2/settings"
+            path="/management-portal-hcsk/settings"
             element={
               <ProtectedRoute>
                 <SettingsManager />
