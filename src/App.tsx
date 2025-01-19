@@ -1,4 +1,4 @@
-import { Routes, Route, useRoutes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from "./components/admin/auth-context";
@@ -49,9 +49,6 @@ import CalendarManager from "./components/admin/pages/CalendarManager";
 import ContentManager from "./components/admin/pages/ContentManager";
 import SettingsManager from "./components/admin/pages/SettingsManager";
 
-// Import tempo routes
-import routes from "tempo-routes";
-
 function App() {
   return (
     <AuthProvider>
@@ -62,9 +59,6 @@ function App() {
           </div>
         }
       >
-        {/* For the tempo routes */}
-        {import.meta.env.VITE_TEMPO && useRoutes(routes)}
-
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
