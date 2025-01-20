@@ -5,10 +5,63 @@
     <link rel="icon" type="image/png" href="/src/assets/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Holy Cross School Kabuganj</title>
+
+    <!-- Critical CSS inline -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      .initial-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #fff;
+        color: #1a1a1a;
+        font-size: 1.2rem;
+        transition: opacity 0.5s ease-out;
+      }
+      .initial-loader.fade-out {
+        opacity: 0;
+      }
+      .error {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #fff;
+        color: #dc2626;
+        font-size: 1.2rem;
+      }
+      @media (prefers-color-scheme: dark) {
+        .initial-loader {
+          background: #1a1a1a;
+          color: #fff;
+        }
+        .error {
+          background: #1a1a1a;
+          color: #ef4444;
+        }
+      }
+    </style>
+
+    <!-- Preload critical assets -->
+    <link rel="stylesheet" href="/src/index.css" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="initial-loader">Loading Holy Cross School Kabuganj...</div>
+    </div>
+
+    <!-- Scripts -->
     <script type="module" src="/src/main.tsx"></script>
-    <script src="https://api.tempolabs.ai/proxy-asset?url=https://storage.googleapis.com/tempo-public-assets/error-handling.js"></script>
   </body>
 </html>
