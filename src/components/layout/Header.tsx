@@ -170,22 +170,21 @@ const Header = ({ schoolName = "Holy Cross School Kabuganj" }: HeaderProps) => {
                 supports-[backdrop-filter]:bg-background/80
               "
             >
-              <SheetHeader className="p-4 border-b border-border">
+              <SheetHeader className="p-6 border-b border-border">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <img src={logo} alt="Logo" className="h-8 w-8" />
                     <SheetTitle className="text-lg font-bold">
                       {schoolName}
                     </SheetTitle>
                   </div>
-                  {/* Single close button, no "double X" */}
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setIsOpen(false)}
-                    className="h-10 w-10 p-1.5 hover:bg-muted rounded-full"
+                    className="h-12 w-12 hover:bg-muted rounded-full"
                   >
-                    <X className="h-8 w-8" />
+                    <X className="h-6 w-6" />
                   </Button>
                 </div>
               </SheetHeader>
