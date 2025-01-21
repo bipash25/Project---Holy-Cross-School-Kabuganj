@@ -16,12 +16,12 @@ const Statistics = () => {
     {
       icon: <Users className="h-8 w-8 text-blue-500" />,
       title: "Total Students",
-      value: "1,200+",
+      value: "100+",
       subtext: "Enrolled in 2023-24",
     },
     {
       icon: <GraduationCap className="h-8 w-8 text-green-500" />,
-      title: "Graduation Rate",
+      title: "Pass Rate",
       value: "98%",
       subtext: "Class of 2023",
     },
@@ -40,7 +40,7 @@ const Statistics = () => {
   ];
 
   const performanceMetrics = [
-    { label: "SSC Pass Rate", value: 98 },
+    { label: "HSLC Pass Rate", value: 98 },
     { label: "First Divisions", value: 85 },
     { label: "Extra-curricular Participation", value: 75 },
     { label: "Student Satisfaction", value: 92 },
