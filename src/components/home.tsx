@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
@@ -16,17 +16,34 @@ import { BackToTop } from "./ui/back-to-top";
 import { ErrorBoundary } from "./ui/error-boundary";
 import CarouselSection from "./home/carousel-section";
 import { HomeNewsSection } from "./news/home-news-section";
-
-import slider1 from "@/assets/images/slider1.jpg";
-import slider2 from "@/assets/images/slider2.jpg";
-import slider5 from "@/assets/images/slider5.jpg";
+import { Skeleton } from "./ui/skeleton";
 
 const Home = () => {
   const navigate = useNavigate();
-  const carouselImages = [slider1, slider2, slider5];
+  const [loading, setLoading] = useState(true);
+  const [carouselImages, setCarouselImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const [slider1, slider2, slider5] = await Promise.all([
+          import("@/assets/images/slider1.jpg").then((m) => m.default),
+          import("@/assets/images/slider2.jpg").then((m) => m.default),
+          import("@/assets/images/slider5.jpg").then((m) => m.default),
+        ]);
+        setCarouselImages([slider1, slider2, slider5]);
+      } catch (error) {
+        console.error("Failed to load carousel images:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadImages();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background w-full">
+    <div className="flex flex-col min-h-screen bg-background">
       <SEO
         title="Home"
         description="Welcome to Holy Cross School Kabuganj. We provide quality education and nurture young minds for a better future."
@@ -35,12 +52,18 @@ const Home = () => {
       />
       <BackToTop />
       <Header />
-      <main className="pt-20 w-full">
+      <main className="flex-grow">
         {/* Hero Carousel Section */}
-        <section className="w-full h-[85vh] relative">
-          <ErrorBoundary section="Hero Carousel">
-            <CarouselSection images={carouselImages} />
-          </ErrorBoundary>
+        <section className="relative bg-muted h-[85vh]">
+          {loading ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <Skeleton className="w-full h-full" />
+            </div>
+          ) : (
+            <ErrorBoundary section="Hero Carousel">
+              <CarouselSection images={carouselImages} />
+            </ErrorBoundary>
+          )}
         </section>
 
         {/* Quick Access Section */}
@@ -49,7 +72,7 @@ const Home = () => {
             Quick Access
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <Card className="p-4 sm:p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-all">
               <div className="flex flex-col items-center text-center h-full">
                 <GraduationCap className="h-10 w-10 sm:h-12 sm:w-12 text-blue-600 mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
@@ -60,7 +83,7 @@ const Home = () => {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full mt-auto"
+                  className="w-full"
                   onClick={() => navigate("/academics/admissions")}
                 >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
@@ -68,7 +91,7 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-all">
               <div className="flex flex-col items-center text-center h-full">
                 <Calculator className="h-10 w-10 sm:h-12 sm:w-12 text-blue-600 mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
@@ -79,7 +102,7 @@ const Home = () => {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full mt-auto"
+                  className="w-full"
                   onClick={() => navigate("/info/fees")}
                 >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
@@ -87,7 +110,7 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-all">
               <div className="flex flex-col items-center text-center h-full">
                 <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 text-blue-600 mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
@@ -98,7 +121,7 @@ const Home = () => {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full mt-auto"
+                  className="w-full"
                   onClick={() => navigate("/info/curriculum")}
                 >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
@@ -106,7 +129,7 @@ const Home = () => {
               </div>
             </Card>
 
-            <Card className="p-4 sm:p-6 hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col">
+            <Card className="p-4 sm:p-6 hover:shadow-lg transition-all">
               <div className="flex flex-col items-center text-center h-full">
                 <Phone className="h-10 w-10 sm:h-12 sm:w-12 text-blue-600 mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
@@ -117,7 +140,7 @@ const Home = () => {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full mt-auto"
+                  className="w-full"
                   onClick={() => navigate("/contact")}
                 >
                   View Details <ChevronRight className="ml-2 h-4 w-4" />
