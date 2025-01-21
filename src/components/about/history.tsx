@@ -58,7 +58,7 @@ const History = () => {
             <h2 className="text-3xl font-bold text-center mb-8">Our Journey</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
                   <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xl font-bold text-blue-600">
                       2007
@@ -75,7 +75,7 @@ const History = () => {
               </Card>
 
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
                   <div className="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xl font-bold text-green-600">
                       2010
@@ -92,7 +92,7 @@ const History = () => {
               </Card>
 
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
                   <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xl font-bold text-purple-600">
                       2012
@@ -112,7 +112,7 @@ const History = () => {
               </Card>
 
               <Card className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center">
                   <div className="w-20 h-20 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xl font-bold text-orange-600">
                       2015
