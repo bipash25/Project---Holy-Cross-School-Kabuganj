@@ -26,47 +26,47 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
     {
       icon: <LayoutDashboard className="h-5 w-5" />,
       label: "Dashboard",
-      path: "/management-portal-hcsk-x8k9z2/dashboard",
+      path: "/management-portal-hcsk/dashboard",
     },
     {
       icon: <Bell className="h-5 w-5" />,
       label: "News & Events",
-      path: "/management-portal-hcsk-x8k9z2/news",
+      path: "/management-portal-hcsk/news",
     },
     {
       icon: <Image className="h-5 w-5" />,
       label: "Media Gallery",
-      path: "/management-portal-hcsk-x8k9z2/media",
+      path: "/management-portal-hcsk/media",
     },
     {
       icon: <Users className="h-5 w-5" />,
       label: "Students",
-      path: "/management-portal-hcsk-x8k9z2/students",
+      path: "/management-portal-hcsk/students",
     },
     {
       icon: <School className="h-5 w-5" />,
       label: "Academics",
-      path: "/management-portal-hcsk-x8k9z2/academics",
+      path: "/management-portal-hcsk/academics",
     },
     {
       icon: <Trophy className="h-5 w-5" />,
       label: "Achievements",
-      path: "/management-portal-hcsk-x8k9z2/achievements",
+      path: "/management-portal-hcsk/achievements",
     },
     {
       icon: <Calendar className="h-5 w-5" />,
       label: "Events Calendar",
-      path: "/management-portal-hcsk-x8k9z2/calendar",
+      path: "/management-portal-hcsk/calendar",
     },
     {
       icon: <FileText className="h-5 w-5" />,
       label: "Content",
-      path: "/management-portal-hcsk-x8k9z2/content",
+      path: "/management-portal-hcsk/content",
     },
     {
       icon: <Settings className="h-5 w-5" />,
       label: "Settings",
-      path: "/management-portal-hcsk-x8k9z2/settings",
+      path: "/management-portal-hcsk/settings",
     },
   ];
 
@@ -77,7 +77,7 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/management-portal-hcsk-x8k9z2/login");
+    navigate("/management-portal-hcsk/login");
   };
 
   return (

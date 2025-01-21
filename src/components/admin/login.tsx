@@ -21,7 +21,7 @@ const AdminLogin = () => {
 
     try {
       await login(username, password);
-      navigate("/management-portal-hcsk-x8k9z2/dashboard");
+      navigate("/management-portal-hcsk/dashboard");
     } catch (error) {
       toast({
         title: "Error",
