@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+// Auth context without Supabase for now
 
 type AuthContextType = {
   isAuthenticated: boolean;

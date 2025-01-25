@@ -17,7 +17,7 @@ import {
 import { Label } from "../../ui/label";
 import { NewsEvent } from "@/lib/api";
 import { ScrollArea } from "../../ui/scroll-area";
-import { DeleteConfirmDialog } from "../../ui/delete-confirm";
+// Removed unused import
 
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1546410531-bb4caa6b424d";
@@ -467,7 +467,6 @@ const NewsManager = () => {
               </div>
             </Card>
           ))}
-          
         </div>
       </div>
     </AdminLayout>

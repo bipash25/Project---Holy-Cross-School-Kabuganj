@@ -1,14 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
-import {
-  Users,
-  Clock,
-  Book,
-  MessageSquare,
-  CalendarCheck,
-  Bell,
-} from "lucide-react";
+import { Clock, Book, MessageSquare, CalendarCheck, Bell } from "lucide-react";
 
 const ParentGuidelines = () => {
   return (

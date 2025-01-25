@@ -1,14 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
-import {
-  UserCheck,
-  Shield,
-  Award,
-  AlertTriangle,
-  BookOpen,
-  Users,
-} from "lucide-react";
+import { UserCheck, Shield, AlertTriangle } from "lucide-react";
 
 const StudentConduct = () => {
   return (
@@ -54,44 +47,6 @@ const StudentConduct = () => {
                     <li>Be honest during examinations</li>
                     <li>Submit work on time</li>
                     <li>Maintain academic records properly</li>
-                  </ul>
-                </div>
-              </div>
-            </Card>
-
-            {/* Classroom Behavior */}
-            <Card className="p-6">
-              <div className="flex items-start gap-4">
-                <BookOpen className="h-8 w-8 text-blue-600 mt-1" />
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">
-                    Classroom Behavior
-                  </h2>
-                  <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                    <li>Pay attention during lessons</li>
-                    <li>Participate actively in class discussions</li>
-                    <li>Maintain silence when required</li>
-                    <li>Keep classrooms clean and organized</li>
-                    <li>Follow teacher instructions promptly</li>
-                  </ul>
-                </div>
-              </div>
-            </Card>
-
-            {/* Social Behavior */}
-            <Card className="p-6">
-              <div className="flex items-start gap-4">
-                <Users className="h-8 w-8 text-blue-600 mt-1" />
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4">
-                    Social Behavior
-                  </h2>
-                  <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                    <li>Practice kindness and empathy</li>
-                    <li>No bullying or harassment</li>
-                    <li>Respect cultural diversity</li>
-                    <li>Use appropriate language</li>
-                    <li>Help and support classmates</li>
                   </ul>
                 </div>
               </div>

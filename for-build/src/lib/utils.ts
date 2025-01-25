@@ -467,10 +467,15 @@ export function formatPhoneNumber(
     case "IN":
       if (format === "international") {
         if (cleaned.length === 10) {
-          return `+91${separator}${cleaned.slice(0, 5)}${separator}${cleaned.slice(5)}`;
+          return `+91${separator}${cleaned.slice(0, 5)}${separator}${cleaned.slice(
+            5,
+          )}`;
         }
         if (cleaned.length === 12 && cleaned.startsWith("91")) {
-          return `+${cleaned.slice(0, 2)}${separator}${cleaned.slice(2, 7)}${separator}${cleaned.slice(7)}`;
+          return `+${cleaned.slice(0, 2)}${separator}${cleaned.slice(
+            2,
+            7,
+          )}${separator}${cleaned.slice(7)}`;
         }
       } else {
         if (cleaned.length === 10) {
@@ -482,14 +487,23 @@ export function formatPhoneNumber(
     case "US":
       if (format === "international") {
         if (cleaned.length === 10) {
-          return `+1${separator}(${cleaned.slice(0, 3)})${separator}${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+          return `+1${separator}(${cleaned.slice(0, 3)})${separator}${cleaned.slice(
+            3,
+            6,
+          )}-${cleaned.slice(6)}`;
         }
         if (cleaned.length === 11 && cleaned.startsWith("1")) {
-          return `+${cleaned.slice(0, 1)}${separator}(${cleaned.slice(1, 4)})${separator}${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+          return `+${cleaned.slice(0, 1)}${separator}(${cleaned.slice(
+            1,
+            4,
+          )})${separator}${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
         }
       } else {
         if (cleaned.length === 10) {
-          return `(${cleaned.slice(0, 3)})${separator}${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+          return `(${cleaned.slice(0, 3)})${separator}${cleaned.slice(
+            3,
+            6,
+          )}-${cleaned.slice(6)}`;
         }
       }
       break;
@@ -497,10 +511,15 @@ export function formatPhoneNumber(
     case "UK":
       if (format === "international") {
         if (cleaned.length === 10) {
-          return `+44${separator}${cleaned.slice(0, 4)}${separator}${cleaned.slice(4)}`;
+          return `+44${separator}${cleaned.slice(0, 4)}${separator}${cleaned.slice(
+            4,
+          )}`;
         }
         if (cleaned.length === 12 && cleaned.startsWith("44")) {
-          return `+${cleaned.slice(0, 2)}${separator}${cleaned.slice(2, 6)}${separator}${cleaned.slice(6)}`;
+          return `+${cleaned.slice(0, 2)}${separator}${cleaned.slice(
+            2,
+            6,
+          )}${separator}${cleaned.slice(6)}`;
         }
       } else {
         if (cleaned.length === 10) {
@@ -701,96 +720,112 @@ interface CurrencyFormatOptions {
   locale?: string;
   minimumFractionDigits?: number;
   maximumFractionDigits?: number;
-  notation?: 'standard' | 'compact';
+  notation?: "standard" | "compact";
   displaySymbol?: boolean;
 }
 
 // Common currency configurations
 export const CURRENCY_CONFIGS = {
   INR: {
-    symbol: '₹',
-    locale: 'en-IN',
-    decimals: 2
+    symbol: "₹",
+    locale: "en-IN",
+    decimals: 2,
   },
   USD: {
-    symbol: ',
-    locale: 'en-US',
-    decimals: 2
+    symbol: "$",
+    locale: "en-US",
+    decimals: 2,
   },
   GBP: {
-    symbol: '£',
-    locale: 'en-GB',
-    decimals: 2
-  }
+    symbol: "£",
+    locale: "en-GB",
+    decimals: 2,
+  },
 } as const;
 
 // Format currency
-export function formatCurrency(amount: number, options: CurrencyFormatOptions = {}): string {
+export function formatCurrency(
+  amount: number,
+  options: CurrencyFormatOptions = {},
+): string {
   const {
-    currency = 'INR',
-    locale = CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.locale || 'en-IN',
-    minimumFractionDigits = CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.decimals || 2,
-    maximumFractionDigits = CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.decimals || 2,
-    notation = 'standard',
-    displaySymbol = true
+    currency = "INR",
+    locale = CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]
+      ?.locale || "en-IN",
+    minimumFractionDigits = CURRENCY_CONFIGS[
+      currency as keyof typeof CURRENCY_CONFIGS
+    ]?.decimals || 2,
+    maximumFractionDigits = CURRENCY_CONFIGS[
+      currency as keyof typeof CURRENCY_CONFIGS
+    ]?.decimals || 2,
+    notation = "standard",
+    displaySymbol = true,
   } = options;
 
   try {
     const formatted = new Intl.NumberFormat(locale, {
-      style: 'currency',
+      style: "currency",
       currency,
       minimumFractionDigits,
       maximumFractionDigits,
-      notation
+      notation,
     }).format(amount);
 
     // Handle symbol display preference
     if (!displaySymbol) {
-      const symbol = CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.symbol || '';
-      return formatted.replace(symbol, '').trim();
+      const symbol =
+        CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.symbol ||
+        "";
+      return formatted.replace(symbol, "").trim();
     }
 
     return formatted;
   } catch (error) {
     // Fallback formatting
-    const symbol = displaySymbol ? (CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.symbol || '') : '';
+    const symbol = displaySymbol
+      ? CURRENCY_CONFIGS[currency as keyof typeof CURRENCY_CONFIGS]?.symbol ||
+        ""
+      : "";
     return `${symbol}${amount.toFixed(minimumFractionDigits)}`;
   }
 }
 
 // Format currency in compact notation (e.g., 1K, 1M)
-export function formatCompactCurrency(amount: number, currency: keyof typeof CURRENCY_CONFIGS = 'INR'): string {
+export function formatCompactCurrency(
+  amount: number,
+  currency: keyof typeof CURRENCY_CONFIGS = "INR",
+): string {
   return formatCurrency(amount, {
     currency,
-    notation: 'compact'
+    notation: "compact",
   });
 }
 
 // Helper functions for common currency formats
 export function formatINR(amount: number, displaySymbol = true): string {
   return formatCurrency(amount, {
-    currency: 'INR',
-    displaySymbol
+    currency: "INR",
+    displaySymbol,
   });
 }
 
 export function formatUSD(amount: number, displaySymbol = true): string {
   return formatCurrency(amount, {
-    currency: 'USD',
-    displaySymbol
+    currency: "USD",
+    displaySymbol,
   });
 }
 
 export function formatGBP(amount: number, displaySymbol = true): string {
   return formatCurrency(amount, {
-    currency: 'GBP',
-    displaySymbol
+    currency: "GBP",
+    displaySymbol,
   });
 }
 
 // Parse currency string back to number
 export function parseCurrencyString(value: string): number {
   // Remove currency symbols and separators
-  const cleaned = value.replace(/[^\d.-]/g, '');
+  const cleaned = value.replace(/[^\d.-]/g, "");
   return parseFloat(cleaned) || 0;
 }

@@ -1,7 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
-import { GraduationCap, BookOpen, Users, ClipboardList } from "lucide-react";
+import { GraduationCap, BookOpen, Users } from "lucide-react";
 
 const Academics = () => {
   return (

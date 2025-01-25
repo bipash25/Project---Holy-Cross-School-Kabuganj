@@ -1,56 +1,47 @@
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Button } from "./button";
-import { ScrollArea } from "./scroll-area";
+import * as React from "react";
 import * as Icons from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from "./button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+} from "./dropdown-menu";
+
+type IconName = keyof typeof Icons;
 
 interface IconPickerProps {
-  value?: string;
-  onChange?: (iconName: string) => void;
+  value?: IconName;
+  onChange?: (value: IconName) => void;
 }
 
-export const IconPicker = ({ value = "Circle", onChange }: IconPickerProps) => {
-  const [selected, setSelected] = useState(value);
-
-  const handleSelect = (iconName: string) => {
-    setSelected(iconName);
-    onChange?.(iconName);
-  };
-
-  const SelectedIcon = Icons[selected as keyof typeof Icons] || Icons.Circle;
+export function IconPicker({ value, onChange }: IconPickerProps) {
+  const IconComponent = value ? Icons[value] : null;
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-full justify-start">
-          <SelectedIcon className="h-4 w-4 mr-2" />
-          {selected}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" className="w-[200px] justify-start">
+          {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+          {value || "Select icon..."}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64">
-        <ScrollArea className="h-72">
-          <div className="grid grid-cols-3 gap-2 p-2">
-            {Object.keys(Icons).map((iconName) => {
-              const Icon = Icons[iconName as keyof typeof Icons];
-              return (
-                <Button
-                  key={iconName}
-                  variant="ghost"
-                  className={cn(
-                    "h-10 w-full justify-start",
-                    selected === iconName && "bg-muted",
-                  )}
-                  onClick={() => handleSelect(iconName)}
-                >
-                  <Icon className="h-4 w-4 mr-2" />
-                  <span className="text-xs">{iconName}</span>
-                </Button>
-              );
-            })}
-          </div>
-        </ScrollArea>
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="h-[300px] overflow-y-auto">
+        {Object.entries(Icons).map(([name, Icon]) => (
+          <DropdownMenuItem
+            key={name}
+            onSelect={() => onChange?.(name as IconName)}
+          >
+            {React.createElement(
+              Icon as React.ComponentType<{ className?: string }>,
+              {
+                className: "h-4 w-4 mr-2",
+              },
+            )}
+            {name}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
-};
+}

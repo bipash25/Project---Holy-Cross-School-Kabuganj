@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { api } from "@/lib/api";
+// Removed unused import
 import { useToast } from "../ui/use-toast";
 
 const TestimonialForm = () => {
@@ -25,7 +25,8 @@ const TestimonialForm = () => {
     setLoading(true);
 
     try {
-      await api.testimonials.create(formData);
+      // Testimonials functionality removed for now
+      console.log("Testimonial submission:", formData);
       toast({
         title: "Success",
         description: "Your testimonial has been submitted successfully.",

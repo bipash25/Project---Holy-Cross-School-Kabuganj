@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "../ui/card";
 import { Calendar, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "../ui/button";
-import { api, NewsEvent } from "@/lib/api";
+import { NewsEvent } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import defaultImage from "@/assets/images/slider1.jpg";
 
@@ -42,8 +42,6 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterType>("all");
-  const [page, setPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +50,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
         setLoading(true);
         const query = supabase
           .from("news_events")
-          .select("*", { count: "exact" })
+          .select("*")
           .order("date", { ascending: false });
 
         if (filter !== "all") {
@@ -62,14 +60,13 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
         if (!showAll) {
           query.limit(3);
         } else {
-          query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+          query.limit(PAGE_SIZE);
         }
 
-        const { data, error, count } = await query;
+        const { data, error } = await query;
 
         if (error) throw error;
         setNews(data || []);
-        setTotalItems(count || 0);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load news");
       } finally {
@@ -78,7 +75,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
     };
 
     loadNews();
-  }, [filter, showAll, page]);
+  }, [filter, showAll]);
 
   if (error) {
     return <div className="text-center text-red-500 py-8">{error}</div>;

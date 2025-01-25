@@ -1,148 +1,127 @@
 import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import generate from "@babel/generator";
-import * as t from "@babel/types";
+import traverse, { NodePath } from "@babel/traverse";
 
-export interface ContentLocation {
-  type: "jsx" | "string" | "import";
-  identifier: string;
-  value: string;
+type TraversePath = NodePath;
+
+type TraverseVisitor = {
+  [key: string]: (path: TraversePath) => void;
+};
+
+export function findJSXElements(code: string, elementType: string): string[] {
+  const ast = parse(code, {
+    sourceType: "module",
+    plugins: ["jsx", "typescript"],
+  });
+
+  const elements: string[] = [];
+
+  const visitor: TraverseVisitor = {
+    JSXText(path: TraversePath) {
+      const parentJSX = path.findParent(
+        (p: TraversePath) =>
+          p.isJSXElement() &&
+          p.node.openingElement.attributes.some(
+            (attr: any) =>
+              attr.name.name === "data-element-type" &&
+              attr.value.value === elementType,
+          ),
+      );
+
+      if (parentJSX) {
+        elements.push(path.node.value);
+      }
+    },
+
+    StringLiteral(path: TraversePath) {
+      const parentJSX = path.findParent(
+        (p: TraversePath) =>
+          p.isJSXElement() &&
+          p.node.openingElement.attributes.some(
+            (attr: any) =>
+              attr.name.name === "data-element-type" &&
+              attr.value.value === elementType,
+          ),
+      );
+
+      if (parentJSX) {
+        elements.push(path.node.value);
+      }
+    },
+  };
+
+  traverse(ast, visitor);
+
+  return elements;
 }
 
-export const findContentInFile = (
-  fileContent: string,
-  sectionId: string,
-): ContentLocation | null => {
-  const ast = parse(fileContent, {
+export function findImports(code: string): string[] {
+  const ast = parse(code, {
     sourceType: "module",
     plugins: ["jsx", "typescript"],
   });
 
-  let location: ContentLocation | null = null;
+  const imports: string[] = [];
 
-  traverse(ast, {
-    JSXText(path) {
-      // Find text content in JSX
-      const parent = path.findParent(
-        (p) =>
-          p.isJSXElement() &&
-          p.node.openingElement.attributes.some(
-            (attr) =>
-              t.isJSXAttribute(attr) &&
-              attr.name.name === "data-content-id" &&
-              t.isStringLiteral(attr.value) &&
-              attr.value.value === sectionId,
-          ),
-      );
-      if (parent) {
-        location = {
-          type: "jsx",
-          identifier: sectionId,
-          value: path.node.value,
-        };
-      }
-    },
-    StringLiteral(path) {
-      // Find string literals in variables
-      const parent = path.findParent(
-        (p) =>
-          p.isVariableDeclarator() &&
-          t.isIdentifier(p.node.id) &&
-          p.node.id.name === sectionId,
-      );
-      if (parent) {
-        location = {
-          type: "string",
-          identifier: sectionId,
-          value: path.node.value,
-        };
-      }
-    },
-    ImportDeclaration(path) {
-      // Find image imports
-      if (path.node.source.value.includes("/assets/images/")) {
-        const importSpecifier = path.node.specifiers.find(
-          (spec) =>
-            t.isImportDefaultSpecifier(spec) &&
-            t.isIdentifier(spec.local) &&
-            spec.local.name === sectionId,
-        );
-        if (importSpecifier) {
-          location = {
-            type: "import",
-            identifier: sectionId,
-            value: path.node.source.value,
-          };
+  const visitor: TraverseVisitor = {
+    ImportDeclaration(path: TraversePath) {
+      const source = path.node.source.value;
+      path.node.specifiers.forEach((spec: any) => {
+        if (spec.type === "ImportDefaultSpecifier") {
+          imports.push(`${spec.local.name} from ${source}`);
+        } else if (spec.type === "ImportSpecifier") {
+          imports.push(`${spec.imported.name} from ${source}`);
         }
-      }
+      });
     },
-  });
+  };
 
-  return location;
-};
+  traverse(ast, visitor);
 
-export const updateFileContent = (
-  fileContent: string,
-  sectionId: string,
-  newValue: string,
-): string => {
-  const ast = parse(fileContent, {
+  return imports;
+}
+
+export function findJSXAttributes(
+  code: string,
+  attributeName: string,
+): string[] {
+  const ast = parse(code, {
     sourceType: "module",
     plugins: ["jsx", "typescript"],
   });
 
-  traverse(ast, {
-    JSXText(path) {
-      const parent = path.findParent(
-        (p) =>
+  const attributes: string[] = [];
+
+  const visitor: TraverseVisitor = {
+    JSXText(path: TraversePath) {
+      const parentJSX = path.findParent(
+        (p: TraversePath) =>
           p.isJSXElement() &&
           p.node.openingElement.attributes.some(
-            (attr) =>
-              t.isJSXAttribute(attr) &&
-              attr.name.name === "data-content-id" &&
-              t.isStringLiteral(attr.value) &&
-              attr.value.value === sectionId,
+            (attr: any) => attr.name.name === attributeName,
           ),
       );
-      if (parent) {
-        path.node.value = newValue;
+
+      if (parentJSX) {
+        attributes.push(path.node.value);
       }
     },
-    StringLiteral(path) {
-      const parent = path.findParent(
-        (p) =>
-          p.isVariableDeclarator() &&
-          t.isIdentifier(p.node.id) &&
-          p.node.id.name === sectionId,
+
+    StringLiteral(path: TraversePath) {
+      const parentJSX = path.findParent(
+        (p: TraversePath) =>
+          p.isJSXElement() &&
+          p.node.openingElement.attributes.some(
+            (attr: any) => attr.name.name === attributeName,
+          ),
       );
-      if (parent) {
-        path.node.value = newValue;
+
+      if (parentJSX) {
+        attributes.push(path.node.value);
       }
     },
-    ImportDeclaration(path) {
-      if (path.node.source.value.includes("/assets/images/")) {
-        const importSpecifier = path.node.specifiers.find(
-          (spec) =>
-            t.isImportDefaultSpecifier(spec) &&
-            t.isIdentifier(spec.local) &&
-            spec.local.name === sectionId,
-        );
-        if (importSpecifier) {
-          path.node.source.value = newValue;
-        }
-      }
-    },
-  });
+  };
 
-  return generate(ast).code;
-};
+  traverse(ast, visitor);
 
-export const generateImageFileName = (originalName: string): string => {
-  const timestamp = Date.now();
-  const extension = originalName.split(".").pop();
-  const safeName = originalName
-    .split(".")[0]
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "-");
-  return `${safeName}-${timestamp}.${extension}`;
-};
+  return attributes;
+}
