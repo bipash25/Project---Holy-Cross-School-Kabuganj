@@ -22,7 +22,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="w-[200px] justify-start">
-          {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
+          {IconComponent && React.createElement(IconComponent as React.ComponentType<{ className?: string }>, { className: "h-4 w-4 mr-2" })}
           {value || "Select icon..."}
         </Button>
       </DropdownMenuTrigger>
