@@ -4,11 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
 import { splitVendorChunkPlugin } from "vite";
-
-const conditionalPlugins = [];
-if (process.env.TEMPO) {
-  conditionalPlugins.push(["tempo-devtools/swc", {}]);
-}
+import { tempo } from "tempo-devtools/dist/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,10 +15,11 @@ export default defineConfig({
   },
   plugins: [
     react({
-      plugins: [...conditionalPlugins],
+      plugins: process.env.TEMPO ? [["tempo-devtools/swc", {}]] : [],
     }),
     imagetools(),
     splitVendorChunkPlugin(),
+    tempo(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png"],
@@ -51,6 +48,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: "dist",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -60,5 +58,7 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    minify: true,
   },
 });

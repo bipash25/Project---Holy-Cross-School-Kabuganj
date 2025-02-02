@@ -1,8 +1,9 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useRoutes } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from "./components/admin/auth-context";
 import { ProtectedRoute } from "./components/admin/protected-route";
+import routes from "tempo-routes";
 
 // Pages
 import Home from "./components/home";
@@ -69,6 +70,9 @@ function App() {
           </div>
         }
       >
+        {/* Tempo routes */}
+        {import.meta.env.VITE_TEMPO && useRoutes(routes)}
+
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
