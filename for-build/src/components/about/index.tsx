@@ -19,9 +19,9 @@ const About = () => {
       <BackToTop />
       <Header />
 
-      <main className="pt-20">
+      <main>
         {/* Hero Section */}
-        <section className="relative h-[400px] mb-12">
+        <section className="relative h-[400px] mb-12 mt-20">
           <div className="absolute inset-0">
             <EditableContent id="heroImage" type="image">
               <img
