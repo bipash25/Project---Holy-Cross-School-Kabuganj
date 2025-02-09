@@ -5,6 +5,7 @@ import { Button } from "../../ui/button";
 import { useToast } from "../../ui/use-toast";
 import { GraduationCap, Users, Trophy } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { Skeleton } from "../../ui/skeleton";
 
 interface SchoolStats {
   id: string;
@@ -20,9 +21,35 @@ interface SchoolStats {
   updated_at: string;
 }
 
+const StatsSkeleton = () => (
+  <Card className="p-6">
+    <div className="flex items-start gap-4">
+      <Skeleton className="h-8 w-8 rounded" />
+      <div className="space-y-4 flex-1">
+        <Skeleton className="h-6 w-48" />
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
+
 const AcademicsManager = () => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState<SchoolStats | null>(null);
 
   useEffect(() => {
@@ -31,6 +58,7 @@ const AcademicsManager = () => {
 
   const loadStats = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from("school_stats")
         .select("*")
@@ -45,6 +73,8 @@ const AcademicsManager = () => {
         description: "Failed to load academic statistics",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +82,7 @@ const AcademicsManager = () => {
     e.preventDefault();
     if (!stats) return;
 
-    setLoading(true);
+    setSaving(true);
     try {
       const { error } = await supabase
         .from("school_stats")
@@ -73,15 +103,39 @@ const AcademicsManager = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Academic Statistics</h1>
+              <p className="text-muted-foreground">
+                Manage school academic statistics
+              </p>
+            </div>
+            <Skeleton className="h-10 w-28" />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <StatsSkeleton />
+            <StatsSkeleton />
+            <StatsSkeleton />
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   if (!stats) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <p className="text-muted-foreground">Loading statistics...</p>
+          <p className="text-muted-foreground">No statistics found</p>
         </div>
       </AdminLayout>
     );
@@ -97,12 +151,12 @@ const AcademicsManager = () => {
               Manage school academic statistics
             </p>
           </div>
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Saving..." : "Save Changes"}
+          <Button onClick={handleSubmit} disabled={saving}>
+            {saving ? "Saving..." : "Save Changes"}
           </Button>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid md:grid-cols-2 gap-6">
           <Card className="p-6">
             <div className="flex items-start gap-4">
               <Users className="h-8 w-8 text-blue-600 mt-1" />
@@ -120,6 +174,7 @@ const AcademicsManager = () => {
                         setStats({ ...stats, total_students: +e.target.value })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -133,6 +188,7 @@ const AcademicsManager = () => {
                         setStats({ ...stats, total_teachers: +e.target.value })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -144,6 +200,7 @@ const AcademicsManager = () => {
                         setStats({ ...stats, total_staff: +e.target.value })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                 </div>
@@ -171,6 +228,7 @@ const AcademicsManager = () => {
                         })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -182,6 +240,7 @@ const AcademicsManager = () => {
                         setStats({ ...stats, sports_medals: +e.target.value })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -195,6 +254,7 @@ const AcademicsManager = () => {
                         setStats({ ...stats, cultural_awards: +e.target.value })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                 </div>
@@ -221,6 +281,7 @@ const AcademicsManager = () => {
                       min="0"
                       max="100"
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -237,6 +298,7 @@ const AcademicsManager = () => {
                         })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                   <div>
@@ -253,6 +315,7 @@ const AcademicsManager = () => {
                         })
                       }
                       className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                 </div>

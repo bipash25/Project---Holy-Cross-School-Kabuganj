@@ -1,9 +1,16 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import type { AdminUser } from "@/types/admin";
+import {
+  loginAdmin,
+  logoutAdmin,
+  getAdminSession,
+  validateAdminSession,
+} from "@/lib/admin";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  user: AdminUser | null;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -11,35 +18,37 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<AdminUser | null>(null);
 
   useEffect(() => {
-    // Check session on mount
-    const session = localStorage.getItem("admin_session");
-    if (session) {
-      setIsAuthenticated(true);
-    }
+    const initAuth = async () => {
+      const session = getAdminSession();
+      if (session) {
+        const isValid = await validateAdminSession();
+        if (isValid) {
+          setIsAuthenticated(true);
+          setUser(session.user);
+        }
+      }
+    };
+
+    initAuth();
   }, []);
 
-  const login = async (username: string, password: string) => {
-    // In a real app, use proper authentication. This is just for demo.
-    const ADMIN_USERNAME = "admin@hcsk.edu";
-    const ADMIN_PASSWORD = "HCSKAdmin@2024";
-
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      localStorage.setItem("admin_session", "true");
-      setIsAuthenticated(true);
-    } else {
-      throw new Error("Invalid credentials");
-    }
+  const login = async (email: string, password: string) => {
+    const session = await loginAdmin(email, password);
+    setIsAuthenticated(true);
+    setUser(session.user);
   };
 
   const logout = async () => {
-    localStorage.removeItem("admin_session");
+    await logoutAdmin();
     setIsAuthenticated(false);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -6,9 +6,10 @@ import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import { useAuth } from "./auth-context";
 import { Lock } from "lucide-react";
+import { Label } from "../ui/label";
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -20,12 +21,12 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      await login(username, password);
+      await login(email, password);
       navigate("/management-portal-hcsk/dashboard");
     } catch (error) {
       toast({
         title: "Error",
-        description: "Invalid credentials",
+        description: error instanceof Error ? error.message : "Failed to login",
         variant: "destructive",
       });
     } finally {
@@ -48,18 +49,22 @@ const AdminLogin = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
             <Input
+              id="email"
               type="email"
-              placeholder="Email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
             <Input
+              id="password"
               type="password"
-              placeholder="Password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

@@ -48,6 +48,7 @@ import AcademicsManager from "./components/admin/pages/AcademicsManager";
 import CalendarManager from "./components/admin/pages/CalendarManager";
 import ContentManager from "./components/admin/pages/ContentManager";
 import SettingsManager from "./components/admin/pages/SettingsManager";
+import AdminUsersManager from "./components/admin/pages/AdminUsersManager";
 
 function App() {
   useEffect(() => {
@@ -187,8 +188,16 @@ function App() {
           <Route
             path="/management-portal-hcsk/settings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermission="manage_settings">
                 <SettingsManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk/admin-users"
+            element={
+              <ProtectedRoute requiredPermission="manage_admins">
+                <AdminUsersManager />
               </ProtectedRoute>
             }
           />

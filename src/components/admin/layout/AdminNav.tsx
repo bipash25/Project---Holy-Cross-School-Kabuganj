@@ -11,8 +11,11 @@ import {
   School,
   Trophy,
   Calendar,
+  UserCircle,
+  UserCog,
 } from "lucide-react";
 import { useAuth } from "../auth-context";
+import { usePermissions } from "@/hooks/use-permissions";
 
 interface AdminNavProps {
   onNavItemClick?: () => void;
@@ -20,13 +23,19 @@ interface AdminNavProps {
 
 const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const { can } = usePermissions();
 
   const navItems = [
     {
       icon: <LayoutDashboard className="h-5 w-5" />,
       label: "Dashboard",
       path: "/management-portal-hcsk/dashboard",
+    },
+    can("manage_admins") && {
+      icon: <UserCog className="h-5 w-5" />,
+      label: "Admin Users",
+      path: "/management-portal-hcsk/admin-users",
     },
     {
       icon: <Bell className="h-5 w-5" />,
@@ -63,7 +72,7 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
       label: "Content",
       path: "/management-portal-hcsk/content",
     },
-    {
+    can("manage_settings") && {
       icon: <Settings className="h-5 w-5" />,
       label: "Settings",
       path: "/management-portal-hcsk/settings",
@@ -84,12 +93,15 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
     <div className="h-full flex flex-col p-4">
       <div className="mb-8 mt-4 lg:mt-0">
         <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-        <p className="text-sm text-gray-400">Holy Cross School</p>
+        <div className="flex items-center gap-2 mt-2 text-gray-400">
+          <UserCircle className="h-4 w-4" />
+          <p className="text-sm">{user?.name || user?.email}</p>
+        </div>
       </div>
 
       <nav className="flex-1 -mx-2">
         <ul className="space-y-1">
-          {navItems.map((item, index) => (
+          {navItems.filter(Boolean).map((item, index) => (
             <li key={index}>
               <Button
                 variant="ghost"

@@ -1,34 +1,44 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import AdminLayout from "../layout/AdminLayout";
 import { Card } from "../../ui/card";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { useToast } from "../../ui/use-toast";
-import { Save } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { Label } from "../../ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
-
-interface Settings {
-  id: string;
-  school_name: string;
-  email: string;
-  phone: string;
-  address: string;
-  facebook_url?: string;
-  twitter_url?: string;
-  instagram_url?: string;
-  admission_email?: string;
-  support_email?: string;
-  office_hours?: string;
-  meta_description?: string;
-  meta_keywords?: string;
-}
+import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  settingsFormSchema,
+  type SettingsFormValues,
+} from "@/lib/validations/settings";
+import { Form } from "../../ui/form";
+import { Skeleton } from "../../ui/skeleton";
 
 const SettingsManager = () => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [settings, setSettings] = useState<Settings | null>(null);
+  const form = useForm<SettingsFormValues>({
+    resolver: zodResolver(settingsFormSchema),
+    defaultValues: {
+      school_name: "",
+      email: "",
+      phone: "",
+      address: "",
+      facebook_url: "",
+      twitter_url: "",
+      instagram_url: "",
+      admission_email: "",
+      support_email: "",
+      office_hours: "",
+      meta_description: "",
+      meta_keywords: "",
+    },
+  });
+
+  const {
+    formState: { isSubmitting },
+  } = form;
 
   useEffect(() => {
     loadSettings();
@@ -42,7 +52,9 @@ const SettingsManager = () => {
         .single();
 
       if (error) throw error;
-      setSettings(data);
+      if (data) {
+        form.reset(data);
+      }
     } catch (error) {
       console.error("Error loading settings:", error);
       toast({
@@ -53,14 +65,11 @@ const SettingsManager = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
+  const onSubmit = async (values: SettingsFormValues) => {
     try {
       const { error } = await supabase
         .from("settings")
-        .upsert([{ ...settings, id: settings?.id || "1" }]);
+        .upsert([{ ...values, id: "1" }]);
 
       if (error) throw error;
 
@@ -76,24 +85,8 @@ const SettingsManager = () => {
         description: "Failed to save settings",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
-
-  const handleChange = (key: keyof Settings, value: string) => {
-    setSettings((prev) => (prev ? { ...prev, [key]: value } : null));
-  };
-
-  if (!settings) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <p className="text-muted-foreground">Loading settings...</p>
-        </div>
-      </AdminLayout>
-    );
-  }
 
   return (
     <AdminLayout>
@@ -105,177 +98,120 @@ const SettingsManager = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <Tabs defaultValue="general" className="w-full">
-            <TabsList>
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="contact">Contact</TabsTrigger>
-              <TabsTrigger value="social">Social Media</TabsTrigger>
-              <TabsTrigger value="seo">SEO</TabsTrigger>
-            </TabsList>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Tabs defaultValue="general" className="w-full">
+              <TabsList>
+                <TabsTrigger value="general">General</TabsTrigger>
+                <TabsTrigger value="contact">Contact</TabsTrigger>
+                <TabsTrigger value="social">Social Media</TabsTrigger>
+                <TabsTrigger value="seo">SEO</TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="general">
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>School Name</Label>
-                    <Input
-                      value={settings.school_name}
-                      onChange={(e) =>
-                        handleChange("school_name", e.target.value)
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Address</Label>
-                    <Input
-                      value={settings.address}
-                      onChange={(e) => handleChange("address", e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Office Hours</Label>
-                    <Input
-                      value={settings.office_hours}
-                      onChange={(e) =>
-                        handleChange("office_hours", e.target.value)
-                      }
-                      placeholder="e.g., Mon-Fri: 8:00 AM - 4:00 PM"
-                    />
-                  </div>
+              {isSubmitting ? (
+                <div className="space-y-6 mt-6">
+                  {[...Array(4)].map((_, index) => (
+                    <Card key={index} className="p-6">
+                      <div className="space-y-4">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-4 w-40" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                    </Card>
+                  ))}
                 </div>
-              </Card>
-            </TabsContent>
+              ) : (
+                <div className="mt-6 space-y-6">
+                  <Card className="p-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          School Name
+                        </label>
+                        <Input {...form.register("school_name")} />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Email</label>
+                        <Input {...form.register("email")} type="email" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Phone</label>
+                        <Input {...form.register("phone")} />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Address</label>
+                        <Input {...form.register("address")} />
+                      </div>
+                    </div>
+                  </Card>
 
-            <TabsContent value="contact">
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Primary Email</Label>
-                    <Input
-                      type="email"
-                      value={settings.email}
-                      onChange={(e) => handleChange("email", e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Card className="p-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Facebook URL
+                        </label>
+                        <Input {...form.register("facebook_url")} type="url" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Twitter URL
+                        </label>
+                        <Input {...form.register("twitter_url")} type="url" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Instagram URL
+                        </label>
+                        <Input {...form.register("instagram_url")} type="url" />
+                      </div>
+                    </div>
+                  </Card>
 
-                  <div className="space-y-2">
-                    <Label>Phone Number</Label>
-                    <Input
-                      value={settings.phone}
-                      onChange={(e) => handleChange("phone", e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Admission Email</Label>
-                    <Input
-                      type="email"
-                      value={settings.admission_email || ""}
-                      onChange={(e) =>
-                        handleChange("admission_email", e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Support Email</Label>
-                    <Input
-                      type="email"
-                      value={settings.support_email || ""}
-                      onChange={(e) =>
-                        handleChange("support_email", e.target.value)
-                      }
-                    />
-                  </div>
+                  <Card className="p-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Meta Description
+                        </label>
+                        <Input {...form.register("meta_description")} />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Meta Keywords
+                        </label>
+                        <Input {...form.register("meta_keywords")} />
+                      </div>
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </TabsContent>
+              )}
+            </Tabs>
 
-            <TabsContent value="social">
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Facebook URL</Label>
-                    <Input
-                      type="url"
-                      value={settings.facebook_url || ""}
-                      onChange={(e) =>
-                        handleChange("facebook_url", e.target.value)
-                      }
-                      placeholder="https://facebook.com/..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Twitter URL</Label>
-                    <Input
-                      type="url"
-                      value={settings.twitter_url || ""}
-                      onChange={(e) =>
-                        handleChange("twitter_url", e.target.value)
-                      }
-                      placeholder="https://twitter.com/..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Instagram URL</Label>
-                    <Input
-                      type="url"
-                      value={settings.instagram_url || ""}
-                      onChange={(e) =>
-                        handleChange("instagram_url", e.target.value)
-                      }
-                      placeholder="https://instagram.com/..."
-                    />
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="seo">
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Meta Description</Label>
-                    <Input
-                      value={settings.meta_description || ""}
-                      onChange={(e) =>
-                        handleChange("meta_description", e.target.value)
-                      }
-                      placeholder="Brief description of the school for search engines"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Meta Keywords</Label>
-                    <Input
-                      value={settings.meta_keywords || ""}
-                      onChange={(e) =>
-                        handleChange("meta_keywords", e.target.value)
-                      }
-                      placeholder="school, education, kabuganj, etc."
-                    />
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-          </Tabs>
-
-          <div className="flex justify-end mt-6">
-            <Button type="submit" disabled={loading}>
-              <Save className="h-4 w-4 mr-2" />
-              {loading ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-[150px]"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </AdminLayout>
   );
