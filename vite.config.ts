@@ -12,6 +12,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
+    // @ts-ignore
+    allowedHosts: process.env.TEMPO === "true" ? true : undefined,
   },
   plugins: [
     react({

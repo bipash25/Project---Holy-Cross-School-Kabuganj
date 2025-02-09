@@ -4,7 +4,6 @@ import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
 import { splitVendorChunkPlugin } from "vite";
-import { tempo } from "tempo-devtools/dist/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,12 +13,9 @@ export default defineConfig({
     host: true,
   },
   plugins: [
-    react({
-      plugins: process.env.TEMPO ? [["tempo-devtools/swc", {}]] : [],
-    }),
+    react(),
     imagetools(),
     splitVendorChunkPlugin(),
-    tempo(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png"],

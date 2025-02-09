@@ -125,6 +125,14 @@ function App() {
             }
           />
           <Route
+            path="/management-portal-hcsk/"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/management-portal-hcsk/news"
             element={
               <ProtectedRoute>

@@ -52,7 +52,9 @@ const Home = () => {
       />
       <BackToTop />
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-20">
+        {" "}
+        {/* Added pt-20 here */}
         {/* Hero Carousel Section */}
         <section className="relative bg-muted h-[85vh]">
           {loading ? (
@@ -65,10 +67,14 @@ const Home = () => {
             </ErrorBoundary>
           )}
         </section>
-
         {/* Quick Access Section */}
         <section className="container mx-auto px-4 py-8 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-12">
+          <h2
+            className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-12"
+            data-editable
+            id="quickAccessTitle"
+            data-description="Quick access section title"
+          >
             Quick Access
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -78,7 +84,12 @@ const Home = () => {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   Admission Procedures
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
+                <p
+                  className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow"
+                  data-editable
+                  id="admissionDesc"
+                  data-description="Admission card description"
+                >
                   Learn about our admission process and requirements
                 </p>
                 <Button
@@ -97,7 +108,12 @@ const Home = () => {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   School Fees
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
+                <p
+                  className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow"
+                  data-editable
+                  id="feesDesc"
+                  data-description="Fees card description"
+                >
                   View our transparent fee structure
                 </p>
                 <Button
@@ -116,7 +132,12 @@ const Home = () => {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   Curriculum
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
+                <p
+                  className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow"
+                  data-editable
+                  id="curriculumDesc"
+                  data-description="Curriculum card description"
+                >
                   Explore our comprehensive curriculum
                 </p>
                 <Button
@@ -135,7 +156,12 @@ const Home = () => {
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">
                   Contact Information
                 </h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow">
+                <p
+                  className="text-sm sm:text-base text-muted-foreground mb-4 flex-grow"
+                  data-editable
+                  id="contactDesc"
+                  data-description="Contact card description"
+                >
                   Get in touch with us
                 </p>
                 <Button
@@ -149,7 +175,6 @@ const Home = () => {
             </Card>
           </div>
         </section>
-
         {/* News & Events Section */}
         <ErrorBoundary section="News & Events">
           <HomeNewsSection />

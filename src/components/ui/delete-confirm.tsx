@@ -9,23 +9,25 @@ import {
   AlertDialogTitle,
 } from "./alert-dialog";
 
-interface DeleteConfirmProps {
+interface DeleteConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   title?: string;
   description?: string;
-  loading?: boolean;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 export function DeleteConfirmDialog({
   open,
   onOpenChange,
   onConfirm,
-  title = "Are you sure?",
-  description = "This action cannot be undone.",
-  loading = false,
-}: DeleteConfirmProps) {
+  title = "Delete Confirmation",
+  description = "Are you sure you want to delete this item? This action cannot be undone.",
+  confirmText = "Delete",
+  cancelText = "Cancel",
+}: DeleteConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -34,16 +36,12 @@ export function DeleteConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={(e) => {
-              e.preventDefault();
-              onConfirm();
-            }}
-            className="bg-destructive hover:bg-destructive/90"
-            disabled={loading}
+            onClick={onConfirm}
+            className="bg-red-600 hover:bg-red-700"
           >
-            {loading ? "Deleting..." : "Delete"}
+            {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

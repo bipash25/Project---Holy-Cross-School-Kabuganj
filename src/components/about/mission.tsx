@@ -16,7 +16,12 @@ const Mission = () => {
                 <Target className="h-12 w-12 mb-4" />
                 <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
                 <EditableContent id="missionStatement" type="richtext">
-                  <p className="text-lg">
+                  <p
+                    className="text-lg"
+                    data-editable
+                    id="missionStatement"
+                    data-description="School's mission statement"
+                  >
                     To provide a nurturing environment that fosters academic
                     excellence, personal growth, and social responsibility,
                     preparing students to become successful global citizens of
@@ -31,7 +36,12 @@ const Mission = () => {
                 <Eye className="h-12 w-12 mb-4" />
                 <h2 className="text-3xl font-bold mb-4">Our Vision</h2>
                 <EditableContent id="visionStatement" type="richtext">
-                  <p className="text-lg">
+                  <p
+                    className="text-lg"
+                    data-editable
+                    id="visionStatement"
+                    data-description="School's vision statement"
+                  >
                     To be recognized as a leading educational institution that
                     empowers students with knowledge, skills, and values
                     necessary for lifelong success and meaningful contribution

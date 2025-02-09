@@ -36,7 +36,12 @@ const About = () => {
             <div className="text-white max-w-2xl">
               <h1 className="text-4xl font-bold mb-4">About Our School</h1>
               <EditableContent id="introText" type="richtext">
-                <p className="text-xl">
+                <p
+                  className="text-xl"
+                  data-editable
+                  id="aboutIntro"
+                  data-description="About page introduction text"
+                >
                   Learn about Holy Cross School Kabuganj's history, mission,
                   values, and commitment to educational excellence.
                 </p>
@@ -51,8 +56,20 @@ const About = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Card className="p-6 text-center hover:shadow-lg transition-shadow">
                 <Book className="h-12 w-12 mx-auto mb-4 text-blue-600" />
-                <h3 className="text-xl font-semibold mb-2">15+ Years</h3>
-                <p className="text-muted-foreground">Of Academic Excellence</p>
+                <h3
+                  className="text-xl font-semibold mb-2"
+                  data-editable
+                  id="yearsTitle"
+                >
+                  15+ Years
+                </h3>
+                <p
+                  className="text-muted-foreground"
+                  data-editable
+                  id="yearsDesc"
+                >
+                  Of Academic Excellence
+                </p>
               </Card>
 
               <Card className="p-6 text-center hover:shadow-lg transition-shadow">

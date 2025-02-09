@@ -1,9 +1,8 @@
-import { Routes, Route, useRoutes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Suspense, useEffect } from "react";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from "./components/admin/auth-context";
 import { ProtectedRoute } from "./components/admin/protected-route";
-import routes from "tempo-routes";
 
 // Pages
 import Home from "./components/home";
@@ -70,9 +69,6 @@ function App() {
           </div>
         }
       >
-        {/* Tempo routes */}
-        {import.meta.env.VITE_TEMPO && useRoutes(routes)}
-
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
@@ -118,6 +114,14 @@ function App() {
           />
           <Route
             path="/management-portal-hcsk/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/management-portal-hcsk/"
             element={
               <ProtectedRoute>
                 <AdminDashboard />
@@ -188,9 +192,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Add this before the catchall route */}
-          {import.meta.env.VITE_TEMPO && <Route path="/tempobook/*" />}
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

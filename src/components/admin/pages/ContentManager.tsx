@@ -3,218 +3,179 @@ import AdminLayout from "../layout/AdminLayout";
 import { Card } from "../../ui/card";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
 import { useToast } from "../../ui/use-toast";
-import { ColorPicker } from "../../ui/color-picker";
-import { LinkEditor } from "../../ui/link-editor";
-import { IconPicker } from "../../ui/icon-picker";
-import { ImageUpload } from "../../ui/image-upload";
-import { ListEditor } from "../../ui/list-editor";
-import { EditableContent } from "../../ui/editable-content";
-import { cn } from "@/lib/utils";
-import * as Icons from "lucide-react";
-
-interface EditableContent {
-  id: string;
-  type: string;
-  label: string;
-  defaultValue: any;
-}
-
-interface LayoutSection {
-  type: "row" | "column";
-  columns?: number;
-  children: (string | LayoutSection)[];
-}
-
-interface ContentTypeConfig {
-  label: string;
-  icon: keyof typeof Icons;
-  editor: React.ComponentType<any>;
-  preview: React.ComponentType<any>;
-}
-
-const contentTypes: Record<string, ContentTypeConfig> = {
-  text: {
-    label: "Text",
-    icon: "Type",
-    editor: Input,
-    preview: ({ value }) => <span>{value}</span>,
-  },
-  richtext: {
-    label: "Rich Text",
-    icon: "FileText",
-    editor: Textarea,
-    preview: ({ value }) => <div className="prose">{value}</div>,
-  },
-  image: {
-    label: "Image",
-    icon: "Image",
-    editor: ImageUpload,
-    preview: ({ value }) => (
-      <img src={value} alt="Preview" className="max-w-full h-auto" />
-    ),
-  },
-  list: {
-    label: "List",
-    icon: "List",
-    editor: ListEditor,
-    preview: ({ value }) => (
-      <ul className="list-disc pl-4">
-        {value.map((item: string, i: number) => (
-          <li key={i}>{item}</li>
-        ))}
-      </ul>
-    ),
-  },
-  link: {
-    label: "Link",
-    icon: "Link",
-    editor: LinkEditor,
-    preview: ({ value }) => (
-      <a href={value.url} className="text-blue-500 hover:underline">
-        {value.text}
-      </a>
-    ),
-  },
-  color: {
-    label: "Color",
-    icon: "Palette",
-    editor: ColorPicker,
-    preview: ({ value }) => (
-      <div
-        className="w-6 h-6 rounded-full"
-        style={{ backgroundColor: value }}
-      />
-    ),
-  },
-};
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Label } from "../../ui/label";
+import { FileEdit, Save, Search, FileCode, Loader2 } from "lucide-react";
+import { useContentEditor } from "@/hooks/use-content-editor";
+import { CONTENT_SECTIONS } from "@/lib/content-manager";
 
 const ContentManager = () => {
+  const [selectedSection, setSelectedSection] = useState(
+    CONTENT_SECTIONS[0].id,
+  );
+
+  const {
+    contents,
+    loading,
+    error,
+    editingItem,
+    searchQuery,
+    setEditingItem,
+    setSearchQuery,
+    updateContent,
+    refresh,
+  } = useContentEditor(selectedSection);
+
   const { toast } = useToast();
-  const [contents, setContents] = useState<EditableContent[]>([]);
-  const [layouts, setLayouts] = useState<LayoutSection[]>([]);
 
-  const handleContentChange = (content: EditableContent, value: any) => {
-    setContents((prev) =>
-      prev.map((c) =>
-        c.id === content.id ? { ...c, defaultValue: value } : c,
-      ),
-    );
-  };
-
-  const findContent = (id: string) => {
-    return contents.find((c) => c.id === id);
-  };
-
-  const getContentType = (id: string) => {
-    const content = findContent(id);
-    return content?.type || "text";
-  };
-
-  const renderContentEditor = (content: EditableContent) => {
-    const typeConfig = contentTypes[content.type];
-    if (!typeConfig) return null;
-
-    const EditorComponent = typeConfig.editor;
-    const Icon = Icons[typeConfig.icon];
-
-    return (
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4" />
-          <Label>{content.label}</Label>
-        </div>
-        <EditorComponent
-          value={content.defaultValue}
-          onChange={(value: any) => handleContentChange(content, value)}
-        />
-      </div>
-    );
-  };
-
-  const renderLayoutPreview = (layout: LayoutSection) => {
-    return (
-      <div className="relative border-2 border-dashed border-muted-foreground/20 p-4 rounded-lg">
-        <div
-          className={cn(
-            "grid gap-4",
-            layout.type === "row" ? "grid-flow-col" : "grid-flow-row",
-            `grid-cols-${layout.columns || 1}`,
-          )}
-        >
-          {layout.children.map((child, index) => (
-            <div
-              key={index}
-              className={cn(
-                "p-4 bg-muted rounded-lg",
-                "hover:outline hover:outline-2 hover:outline-blue-500/50",
-              )}
-            >
-              {typeof child === "string" ? (
-                <EditableContent
-                  id={child}
-                  type={getContentType(child)}
-                  preview
-                >
-                  {renderContentPreview(child)}
-                </EditableContent>
-              ) : (
-                renderLayoutPreview(child)
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="absolute -top-3 left-4 px-2 bg-background text-xs text-muted-foreground">
-          {layout.type === "row" ? "Row" : "Column"}
-        </div>
-      </div>
-    );
-  };
-
-  const renderContentPreview = (contentId: string) => {
-    const content = findContent(contentId);
-    if (!content) return null;
-
-    const typeConfig = contentTypes[content.type];
-    if (!typeConfig) return null;
-
-    const PreviewComponent = typeConfig.preview;
-    return <PreviewComponent value={content.defaultValue} />;
+  const handleUpdate = async (id: string, newContent: string) => {
+    try {
+      await updateContent(id, newContent);
+      toast({
+        title: "Success",
+        description: "Content has been updated successfully",
+      });
+      setEditingItem(null);
+    } catch (error) {
+      console.error("Error updating content:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update content",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Content Manager</h1>
-          <p className="text-muted-foreground">
-            Manage website content and layouts
-          </p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold">Content Manager</h1>
+            <p className="text-muted-foreground">
+              Edit website content directly in components
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Content Editor */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Edit Content</h2>
-            <div className="space-y-6">
-              {contents.map((content) => (
-                <div key={content.id}>{renderContentEditor(content)}</div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Tabs
+            value={selectedSection}
+            onValueChange={setSelectedSection}
+            className="w-full"
+          >
+            <TabsList className="w-full justify-start">
+              {CONTENT_SECTIONS.map((section) => (
+                <TabsTrigger key={section.id} value={section.id}>
+                  {section.name}
+                </TabsTrigger>
               ))}
-            </div>
-          </Card>
+            </TabsList>
+          </Tabs>
 
-          {/* Layout Preview */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Layout Preview</h2>
-            <div className="space-y-6">
-              {layouts.map((layout, index) => (
-                <div key={index}>{renderLayoutPreview(layout)}</div>
-              ))}
-            </div>
-          </Card>
+          <div className="relative w-full sm:w-64 flex-shrink-0">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search content..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
         </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-500">{error}</div>
+        ) : contents.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            No editable content found in this section
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {contents.map((item) => (
+              <Card key={item.id} className="p-4">
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="font-semibold">{item.id}</h3>
+                      {item.description && (
+                        <p className="text-sm text-muted-foreground">
+                          {item.description}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs text-muted-foreground">
+                          {item.componentPath}
+                        </p>
+                        {item.parentComponent && (
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted">
+                            {item.parentComponent}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setEditingItem(item.id)}
+                    >
+                      <FileEdit className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {editingItem === item.id ? (
+                    <div className="space-y-4">
+                      <Textarea
+                        value={item.content}
+                        onChange={(e) =>
+                          contents.map((c) =>
+                            c.id === item.id
+                              ? { ...c, content: e.target.value }
+                              : c,
+                          )
+                        }
+                        className="min-h-[100px] font-mono text-sm"
+                      />
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditingItem(null)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => handleUpdate(item.id, item.content)}
+                        >
+                          <Save className="h-4 w-4 mr-2" />
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <pre className="whitespace-pre-wrap text-sm p-3 bg-muted rounded-md font-mono">
+                        {item.content}
+                      </pre>
+                      <div className="absolute top-2 right-2">
+                        <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                          {item.elementType}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

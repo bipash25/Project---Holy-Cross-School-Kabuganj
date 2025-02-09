@@ -22,6 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "../../ui/table";
+import { TableSkeleton } from "../../ui/table-skeleton";
+import { DeleteConfirmDialog } from "../../ui/delete-confirm";
+import { Skeleton } from "../../ui/skeleton";
 
 interface Student {
   id: string;
@@ -35,9 +38,10 @@ interface Student {
 const StudentsManager = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     roll_number: "",
@@ -52,6 +56,7 @@ const StudentsManager = () => {
 
   const loadStudents = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from("students")
         .select("*")
@@ -66,12 +71,13 @@ const StudentsManager = () => {
         description: "Failed to load students",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
       const { error } = await supabase.from("students").insert([formData]);
@@ -99,14 +105,10 @@ const StudentsManager = () => {
         description: "Failed to add student",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this student?")) return;
-
     try {
       const { error } = await supabase.from("students").delete().eq("id", id);
 
@@ -124,6 +126,8 @@ const StudentsManager = () => {
         description: "Failed to delete student",
         variant: "destructive",
       });
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -263,9 +267,7 @@ const StudentsManager = () => {
                     >
                       Cancel
                     </Button>
-                    <Button type="submit" disabled={loading}>
-                      {loading ? "Adding..." : "Add Student"}
-                    </Button>
+                    <Button type="submit">Add Student</Button>
                   </div>
                 </form>
               </DialogContent>
@@ -274,49 +276,68 @@ const StudentsManager = () => {
         </div>
 
         <Card>
-          <div className="flex justify-between items-center p-4 border-b">
-            <p className="text-sm text-muted-foreground">
-              {filteredStudents.length} students found
-            </p>
-            <Button variant="outline" onClick={exportToCSV}>
-              <Download className="h-4 w-4 mr-2" /> Export CSV
-            </Button>
-          </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Roll Number</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Section</TableHead>
-                <TableHead>Admission Date</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.roll_number}</TableCell>
-                  <TableCell>{student.class}</TableCell>
-                  <TableCell>{student.section}</TableCell>
-                  <TableCell>
-                    {new Date(student.admission_date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(student.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          {loading ? (
+            <div>
+              <div className="p-4 border-b">
+                <Skeleton className="h-4 w-24" />
+              </div>
+              <TableSkeleton columnCount={5} rowCount={5} />
+            </div>
+          ) : (
+            <>
+              <div className="flex justify-between items-center p-4 border-b">
+                <p className="text-sm text-muted-foreground">
+                  {filteredStudents.length} students found
+                </p>
+                <Button variant="outline" onClick={exportToCSV}>
+                  <Download className="h-4 w-4 mr-2" /> Export CSV
+                </Button>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Roll Number</TableHead>
+                    <TableHead>Class</TableHead>
+                    <TableHead>Section</TableHead>
+                    <TableHead>Admission Date</TableHead>
+                    <TableHead className="w-[100px]">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredStudents.map((student) => (
+                    <TableRow key={student.id}>
+                      <TableCell>{student.name}</TableCell>
+                      <TableCell>{student.roll_number}</TableCell>
+                      <TableCell>{student.class}</TableCell>
+                      <TableCell>{student.section}</TableCell>
+                      <TableCell>
+                        {new Date(student.admission_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setItemToDelete(student.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </>
+          )}
         </Card>
+
+        <DeleteConfirmDialog
+          open={!!itemToDelete}
+          onOpenChange={(open) => !open && setItemToDelete(null)}
+          onConfirm={() => itemToDelete && handleDelete(itemToDelete)}
+          title="Delete Student"
+          description="Are you sure you want to delete this student? This action cannot be undone."
+        />
       </div>
     </AdminLayout>
   );

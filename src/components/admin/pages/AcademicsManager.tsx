@@ -2,27 +2,10 @@ import { useState, useEffect } from "react";
 import AdminLayout from "../layout/AdminLayout";
 import { Card } from "../../ui/card";
 import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
 import { useToast } from "../../ui/use-toast";
+import { GraduationCap, Users, Trophy } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../ui/dialog";
-import { Label } from "../../ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
-import { GraduationCap, Users, Trophy, Edit, Plus } from "lucide-react";
+import { Skeleton } from "../../ui/skeleton";
 
 interface SchoolStats {
   id: string;
@@ -38,11 +21,36 @@ interface SchoolStats {
   updated_at: string;
 }
 
+const StatsSkeleton = () => (
+  <Card className="p-6">
+    <div className="flex items-start gap-4">
+      <Skeleton className="h-8 w-8 rounded" />
+      <div className="space-y-4 flex-1">
+        <Skeleton className="h-6 w-48" />
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
+
 const AcademicsManager = () => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [stats, setStats] = useState<SchoolStats | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     loadStats();
@@ -50,6 +58,7 @@ const AcademicsManager = () => {
 
   const loadStats = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from("school_stats")
         .select("*")
@@ -64,25 +73,27 @@ const AcademicsManager = () => {
         description: "Failed to load academic statistics",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!stats) return;
 
+    setSaving(true);
     try {
       const { error } = await supabase
         .from("school_stats")
-        .upsert([{ ...stats, id: stats?.id || "1" }]);
+        .upsert([{ ...stats, updated_at: new Date().toISOString() }]);
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Statistics have been updated successfully",
+        description: "Academic statistics updated successfully",
       });
-      setIsDialogOpen(false);
       loadStats();
     } catch (error) {
       console.error("Error updating stats:", error);
@@ -92,19 +103,39 @@ const AcademicsManager = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  const handleChange = (key: keyof SchoolStats, value: number) => {
-    setStats((prev) => (prev ? { ...prev, [key]: value } : null));
-  };
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Academic Statistics</h1>
+              <p className="text-muted-foreground">
+                Manage school academic statistics
+              </p>
+            </div>
+            <Skeleton className="h-10 w-28" />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <StatsSkeleton />
+            <StatsSkeleton />
+            <StatsSkeleton />
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   if (!stats) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <p className="text-muted-foreground">Loading statistics...</p>
+          <p className="text-muted-foreground">No statistics found</p>
         </div>
       </AdminLayout>
     );
@@ -115,213 +146,183 @@ const AcademicsManager = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-3xl font-bold">Academic Statistics</h2>
+            <h1 className="text-3xl font-bold">Academic Statistics</h1>
             <p className="text-muted-foreground">
-              Manage school statistics and achievements
+              Manage school academic statistics
             </p>
           </div>
+          <Button onClick={handleSubmit} disabled={saving}>
+            {saving ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Edit className="h-4 w-4 mr-2" /> Edit Statistics
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Statistics</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Total Students</Label>
-                    <Input
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card className="p-6">
+            <div className="flex items-start gap-4">
+              <Users className="h-8 w-8 text-blue-600 mt-1" />
+              <div className="space-y-4 flex-1">
+                <h2 className="text-xl font-semibold">Student Statistics</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">
+                      Total Students
+                    </label>
+                    <input
                       type="number"
                       value={stats.total_students}
                       onChange={(e) =>
-                        handleChange("total_students", parseInt(e.target.value))
+                        setStats({ ...stats, total_students: +e.target.value })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Total Teachers</Label>
-                    <Input
+                  <div>
+                    <label className="text-sm font-medium">
+                      Total Teachers
+                    </label>
+                    <input
                       type="number"
                       value={stats.total_teachers}
                       onChange={(e) =>
-                        handleChange("total_teachers", parseInt(e.target.value))
+                        setStats({ ...stats, total_teachers: +e.target.value })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Total Staff</Label>
-                    <Input
+                  <div>
+                    <label className="text-sm font-medium">Total Staff</label>
+                    <input
                       type="number"
                       value={stats.total_staff}
                       onChange={(e) =>
-                        handleChange("total_staff", parseInt(e.target.value))
+                        setStats({ ...stats, total_staff: +e.target.value })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Years of Excellence</Label>
-                    <Input
-                      type="number"
-                      value={stats.years_of_excellence}
-                      onChange={(e) =>
-                        handleChange(
-                          "years_of_excellence",
-                          parseInt(e.target.value),
-                        )
-                      }
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Success Rate (%)</Label>
-                    <Input
-                      type="number"
-                      value={stats.success_rate}
-                      onChange={(e) =>
-                        handleChange("success_rate", parseInt(e.target.value))
-                      }
-                      required
-                      min="0"
-                      max="100"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>District Toppers</Label>
-                    <Input
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-start gap-4">
+              <Trophy className="h-8 w-8 text-yellow-600 mt-1" />
+              <div className="space-y-4 flex-1">
+                <h2 className="text-xl font-semibold">Achievements</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">
+                      District Toppers
+                    </label>
+                    <input
                       type="number"
                       value={stats.district_toppers}
                       onChange={(e) =>
-                        handleChange(
-                          "district_toppers",
-                          parseInt(e.target.value),
-                        )
+                        setStats({
+                          ...stats,
+                          district_toppers: +e.target.value,
+                        })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Sports Medals</Label>
-                    <Input
+                  <div>
+                    <label className="text-sm font-medium">Sports Medals</label>
+                    <input
                       type="number"
                       value={stats.sports_medals}
                       onChange={(e) =>
-                        handleChange("sports_medals", parseInt(e.target.value))
+                        setStats({ ...stats, sports_medals: +e.target.value })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Cultural Awards</Label>
-                    <Input
+                  <div>
+                    <label className="text-sm font-medium">
+                      Cultural Awards
+                    </label>
+                    <input
                       type="number"
                       value={stats.cultural_awards}
                       onChange={(e) =>
-                        handleChange(
-                          "cultural_awards",
-                          parseInt(e.target.value),
-                        )
+                        setStats({ ...stats, cultural_awards: +e.target.value })
                       }
-                      required
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+          </Card>
 
-                <div className="flex justify-end gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "Saving..." : "Save Changes"}
-                  </Button>
+          <Card className="p-6">
+            <div className="flex items-start gap-4">
+              <GraduationCap className="h-8 w-8 text-green-600 mt-1" />
+              <div className="space-y-4 flex-1">
+                <h2 className="text-xl font-semibold">Academic Performance</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">
+                      Success Rate (%)
+                    </label>
+                    <input
+                      type="number"
+                      value={stats.success_rate}
+                      onChange={(e) =>
+                        setStats({ ...stats, success_rate: +e.target.value })
+                      }
+                      min="0"
+                      max="100"
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">
+                      Science Fair Wins
+                    </label>
+                    <input
+                      type="number"
+                      value={stats.science_fair_wins}
+                      onChange={(e) =>
+                        setStats({
+                          ...stats,
+                          science_fair_wins: +e.target.value,
+                        })
+                      }
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">
+                      Years of Excellence
+                    </label>
+                    <input
+                      type="number"
+                      value={stats.years_of_excellence}
+                      onChange={(e) =>
+                        setStats({
+                          ...stats,
+                          years_of_excellence: +e.target.value,
+                        })
+                      }
+                      className="w-full mt-1 p-2 border rounded-md"
+                      disabled={saving}
+                    />
+                  </div>
                 </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="p-6">
-            <div className="flex flex-col items-center">
-              <Users className="h-12 w-12 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Total Students</h3>
-              <p className="text-3xl font-bold text-blue-600">
-                {stats.total_students}
-              </p>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex flex-col items-center">
-              <GraduationCap className="h-12 w-12 text-green-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Success Rate</h3>
-              <p className="text-3xl font-bold text-green-600">
-                {stats.success_rate}%
-              </p>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex flex-col items-center">
-              <Trophy className="h-12 w-12 text-yellow-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">District Toppers</h3>
-              <p className="text-3xl font-bold text-yellow-600">
-                {stats.district_toppers}
-              </p>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex flex-col items-center">
-              <Users className="h-12 w-12 text-purple-600 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Total Staff</h3>
-              <p className="text-3xl font-bold text-purple-600">
-                {stats.total_staff}
-              </p>
+              </div>
             </div>
           </Card>
         </div>
-
-        <Card className="p-6">
-          <h3 className="text-xl font-semibold mb-4">Detailed Statistics</h3>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Metric</TableHead>
-                <TableHead>Value</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>Years of Excellence</TableCell>
-                <TableCell>{stats.years_of_excellence}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Sports Medals</TableCell>
-                <TableCell>{stats.sports_medals}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Cultural Awards</TableCell>
-                <TableCell>{stats.cultural_awards}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Science Fair Wins</TableCell>
-                <TableCell>{stats.science_fair_wins}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Card>
       </div>
     </AdminLayout>
   );

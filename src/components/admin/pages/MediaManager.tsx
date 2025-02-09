@@ -14,6 +14,8 @@ import {
   DialogTrigger,
 } from "../../ui/dialog";
 import { Label } from "../../ui/label";
+import { CardSkeleton } from "../../ui/card-skeleton";
+import { DeleteConfirmDialog } from "../../ui/delete-confirm";
 
 interface MediaItem {
   id: string;
@@ -25,11 +27,12 @@ interface MediaItem {
 const MediaManager = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [title, setTitle] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     loadMedia();
@@ -37,6 +40,7 @@ const MediaManager = () => {
 
   const loadMedia = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from("media")
         .select("*")
@@ -51,6 +55,8 @@ const MediaManager = () => {
         description: "Failed to load media items",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +64,6 @@ const MediaManager = () => {
     e.preventDefault();
     if (!selectedFile) return;
 
-    setLoading(true);
     try {
       const fileExt = selectedFile.name.split(".").pop();
       const fileName = `${Math.random()}.${fileExt}`;
@@ -99,14 +104,10 @@ const MediaManager = () => {
         description: "Failed to upload media",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDelete = async (id: string, url: string) => {
-    if (!confirm("Are you sure you want to delete this item?")) return;
-
     try {
       // Extract file path from URL
       const filePath = url.split("/").pop();
@@ -139,6 +140,8 @@ const MediaManager = () => {
         description: "Failed to delete media",
         variant: "destructive",
       });
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -203,54 +206,80 @@ const MediaManager = () => {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "Uploading..." : "Upload"}
-                  </Button>
+                  <Button type="submit">Upload</Button>
                 </div>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {mediaItems.map((item) => (
-            <Card key={item.id} className="relative group">
-              <img
-                src={item.url}
-                alt={item.title}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold truncate">{item.title}</h3>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-sm text-muted-foreground">
-                    {new Date(item.created_at).toLocaleDateString()}
-                  </span>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyUrl(item.url, item.id)}
-                    >
-                      {copiedId === item.id ? (
-                        <Check className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(item.id, item.url)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <CardSkeleton key={i} imageHeight="h-48" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {mediaItems.map((item) => (
+              <Card key={item.id} className="relative group">
+                <img
+                  src={item.url}
+                  alt={item.title}
+                  className="w-full h-48 object-cover rounded-t-lg"
+                />
+                <div className="p-4">
+                  <h3 className="font-semibold truncate">{item.title}</h3>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-sm text-muted-foreground">
+                      {new Date(item.created_at).toLocaleDateString()}
+                    </span>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => copyUrl(item.url, item.id)}
+                      >
+                        {copiedId === item.id ? (
+                          <Check className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setItemToDelete(item.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
+              </Card>
+            ))}
+
+            {mediaItems.length === 0 && (
+              <div className="col-span-full text-center py-8 text-muted-foreground">
+                No media items found
               </div>
-            </Card>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
+
+        <DeleteConfirmDialog
+          open={!!itemToDelete}
+          onOpenChange={(open) => !open && setItemToDelete(null)}
+          onConfirm={() =>
+            itemToDelete &&
+            handleDelete(
+              itemToDelete,
+              mediaItems.find((item) => item.id === itemToDelete)?.url || "",
+            )
+          }
+          title="Delete Media"
+          description="Are you sure you want to delete this media item? This action cannot be undone."
+        />
       </div>
     </AdminLayout>
   );

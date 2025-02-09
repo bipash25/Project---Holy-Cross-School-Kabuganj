@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
 dist
 dist-ssr
@@ -29,3 +30,19 @@ dist-ssr
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Build output
+dist
+build
+out
+
+# Coverage directory
+coverage
+
+# Cache directories
+.cache
+.temp
+
+# System Files
+.DS_Store
+Thumbs.db

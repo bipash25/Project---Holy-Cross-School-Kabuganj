@@ -14,6 +14,7 @@ This project is a comprehensive school website that serves as both an informatio
    - Dynamic hero carousel
    - Quick access section for important links
    - Latest news and events section
+   - Responsive navigation
 
 2. **About Section**
    - School history
@@ -49,6 +50,7 @@ This project is a comprehensive school website that serves as both an informatio
 1. **Dashboard**
    - Overview statistics
    - Quick actions
+   - Real-time updates
 
 2. **Content Management**
    - News and events management
@@ -91,18 +93,20 @@ src/
 │   ├── ui/         # Reusable UI components
 │   └── ...         # Feature-specific components
 ├── lib/           # Utility functions and API
-├── types/         # TypeScript type definitions
-└── stories/       # Storybook stories
+├── hooks/         # Custom React hooks
+└── types/         # TypeScript type definitions
 ```
 
 ## Database Schema
 
 ### Key Tables
-1. `news_events`
-2. `calendar_events`
-3. `school_stats`
-4. `media`
-5. `settings`
+1. `news_events` - News and event entries
+2. `calendar_events` - School calendar events
+3. `school_stats` - School statistics
+4. `media` - Media gallery items
+5. `settings` - Website settings
+6. `students` - Student records
+7. `achievements` - School achievements
 
 ## Setup & Installation
 
@@ -161,24 +165,6 @@ npm run preview
 - Meta tags management
 - Semantic HTML
 - Sitemap generation
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Shadcn/UI for the component library
-- Lucide for the icons
-- Supabase for the backend services
 
 ## Contact
 
