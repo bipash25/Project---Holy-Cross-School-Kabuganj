@@ -112,7 +112,7 @@ src/
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/bipash25/Project---Holy-Cross-School-Kabuganj.git
 ```
 
 2. Install dependencies:
