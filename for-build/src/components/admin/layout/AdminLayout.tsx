@@ -1,18 +1,52 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import AdminNav from "./AdminNav";
+import { Button } from "../../ui/button";
+import { Menu } from "lucide-react";
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
-        <div className="fixed left-0 top-0 bottom-0 w-64 bg-gray-900">
-          <AdminNav />
+        {/* Mobile sidebar toggle */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed top-4 left-4 z-50 md:hidden"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          <Menu className="h-6 w-6" />
+        </Button>
+
+        {/* Sidebar */}
+        <div
+          className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+            fixed md:static left-0 top-0 bottom-0 w-64 bg-gray-900 
+            transition-transform duration-200 ease-in-out z-40 md:translate-x-0
+            ${sidebarOpen ? "shadow-lg" : ""}`}
+        >
+          <AdminNav onNavItemClick={() => setSidebarOpen(false)} />
         </div>
-        <main className="flex-1 ml-64 p-8">{children}</main>
+
+        {/* Main content */}
+        <main
+          className={`flex-1 p-4 md:p-8 w-full ${sidebarOpen ? "md:ml-64" : ""} transition-all duration-200`}
+        >
+          <div className="max-w-7xl mx-auto">{children}</div>
+        </main>
+
+        {/* Overlay for mobile */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
       </div>
     </div>
   );

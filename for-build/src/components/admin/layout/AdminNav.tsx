@@ -13,6 +13,7 @@ import {
   Calendar,
   UserCircle,
   UserCog,
+  X,
 } from "lucide-react";
 import { useAuth } from "../auth-context";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -21,22 +22,18 @@ interface AdminNavProps {
   onNavItemClick?: () => void;
 }
 
+interface NavItem {
+  icon: JSX.Element;
+  label: string;
+  path: string;
+}
+
 const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
   const { can } = usePermissions();
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    onNavItemClick?.();
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate("/management-portal-hcsk/login");
-  };
-
-  const navItems = [
+  const navItems: (NavItem | false)[] = [
     {
       icon: <LayoutDashboard className="h-5 w-5" />,
       label: "Dashboard",
@@ -89,21 +86,41 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
     },
   ];
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onNavItemClick?.();
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/management-portal-hcsk/login");
+  };
+
   return (
     <div className="h-full flex flex-col p-4">
+      {/* Close button for mobile */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-4 right-4 md:hidden text-white hover:text-white hover:bg-gray-800"
+        onClick={onNavItemClick}
+      >
+        <X className="h-6 w-6" />
+      </Button>
+
       <div className="mb-8 mt-4 lg:mt-0">
         <h2 className="text-xl font-bold text-white">Admin Panel</h2>
         <div className="flex items-center gap-2 mt-2 text-gray-400">
           <UserCircle className="h-4 w-4" />
-          <p className="text-sm">{user?.name || user?.email}</p>
+          <p className="text-sm truncate">{user?.name || user?.email}</p>
         </div>
       </div>
 
-      <nav className="flex-1 -mx-2">
+      <nav className="flex-1 -mx-2 overflow-y-auto">
         <ul className="space-y-1">
-          {navItems.filter(Boolean).map((item, index) => {
-            if (!item) return null;
-            return (
+          {navItems
+            .filter((item): item is NavItem => Boolean(item))
+            .map((item, index) => (
               <li key={index}>
                 <Button
                   variant="ghost"
@@ -114,8 +131,7 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
                   <span className="ml-2">{item.label}</span>
                 </Button>
               </li>
-            );
-          })}
+            ))}
         </ul>
       </nav>
 
