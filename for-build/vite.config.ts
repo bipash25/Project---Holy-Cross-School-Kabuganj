@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
 import { splitVendorChunkPlugin } from "vite";
+import compression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,8 +15,23 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    imagetools(),
+    imagetools({
+      defaultDirectives: new URLSearchParams({
+        format: "webp", // Convert all images to WebP
+        quality: "80", // Good balance of quality and size
+        w: "auto", // Maintain aspect ratio
+        fit: "contain",
+      }),
+    }),
     splitVendorChunkPlugin(),
+    compression({
+      algorithm: "gzip",
+      ext: ".gz",
+    }),
+    compression({
+      algorithm: "brotliCompress",
+      ext: ".br",
+    }),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png"],
@@ -55,6 +71,12 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
-    minify: true,
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
   },
 });

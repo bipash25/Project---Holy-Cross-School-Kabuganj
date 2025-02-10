@@ -1,76 +1,61 @@
-interface ImageOptimizationOptions {
-  maxWidth?: number;
-  maxHeight?: number;
-  quality?: number;
-  format?: "jpeg" | "png" | "webp";
+export function generateResponsiveImage(
+  src: string,
+  sizes: number[],
+): string[] {
+  return sizes.map((size) => `${src}?w=${size}&format=webp&q=80`);
 }
 
-export async function optimizeImage(
-  file: File,
-  options: ImageOptimizationOptions = {},
-): Promise<Blob> {
-  const {
-    maxWidth = 1920,
-    maxHeight = 1080,
-    quality = 0.8,
-    format = "webp",
-  } = options;
+export function getSrcSet(src: string): string {
+  const sizes = [320, 640, 768, 1024, 1280, 1536];
+  return sizes
+    .map((size) => `${src}?w=${size}&format=webp&q=80 ${size}w`)
+    .join(", ");
+}
 
-  return new Promise((resolve, reject) => {
-    const img = new Image();
+export function getImageProps(src: string) {
+  return {
+    src: `${src}?format=webp&q=80`,
+    srcSet: getSrcSet(src),
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+    loading: "lazy" as const,
+    decoding: "async" as const,
+  };
+}
+
+export async function optimizeImage(file: File): Promise<string> {
+  try {
+    // Create a canvas element
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Could not get canvas context");
 
-    img.onload = () => {
-      // Calculate new dimensions while maintaining aspect ratio
-      let width = img.width;
-      let height = img.height;
+    // Create an image element
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(file);
 
-      if (width > maxWidth) {
-        height = (maxWidth * height) / width;
-        width = maxWidth;
-      }
+    // Wait for image to load
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
 
-      if (height > maxHeight) {
-        width = (maxHeight * width) / height;
-        height = maxHeight;
-      }
+    // Set canvas dimensions
+    canvas.width = img.width;
+    canvas.height = img.height;
 
-      // Set canvas dimensions
-      canvas.width = width;
-      canvas.height = height;
+    // Draw image to canvas
+    ctx.drawImage(img, 0, 0);
 
-      // Draw and optimize image
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error("Failed to convert canvas to blob"));
-            }
-          },
-          `image/${format}`,
-          quality,
-        );
-      } else {
-        reject(new Error("Failed to get canvas context"));
-      }
-    };
+    // Convert to WebP with quality optimization
+    const optimizedDataUrl = canvas.toDataURL("image/webp", 0.8);
 
-    img.onerror = () => {
-      reject(new Error("Failed to load image"));
-    };
+    // Clean up
+    URL.revokeObjectURL(imageUrl);
 
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    return optimizedDataUrl;
+  } catch (error) {
+    console.error("Error optimizing image:", error);
+    throw error;
+  }
 }

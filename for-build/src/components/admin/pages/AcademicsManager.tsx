@@ -6,6 +6,7 @@ import { useToast } from "../../ui/use-toast";
 import { GraduationCap, Users, Trophy } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "../../ui/skeleton";
+import { Input } from "../../ui/input";
 
 interface SchoolStats {
   id: string;
@@ -159,7 +160,7 @@ const AcademicsManager = () => {
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="p-6">
             <div className="flex items-start gap-4">
-              <Users className="h-8 w-8 text-blue-600 mt-1" />
+              <Users className="h-8 w-8 text-blue-600 dark:text-blue-400 mt-1" />
               <div className="space-y-4 flex-1">
                 <h2 className="text-xl font-semibold">Student Statistics</h2>
                 <div className="space-y-4">
@@ -167,13 +168,13 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Total Students
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.total_students}
                       onChange={(e) =>
                         setStats({ ...stats, total_students: +e.target.value })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -181,25 +182,25 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Total Teachers
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.total_teachers}
                       onChange={(e) =>
                         setStats({ ...stats, total_teachers: +e.target.value })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
                   <div>
                     <label className="text-sm font-medium">Total Staff</label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.total_staff}
                       onChange={(e) =>
                         setStats({ ...stats, total_staff: +e.target.value })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -210,7 +211,7 @@ const AcademicsManager = () => {
 
           <Card className="p-6">
             <div className="flex items-start gap-4">
-              <Trophy className="h-8 w-8 text-yellow-600 mt-1" />
+              <Trophy className="h-8 w-8 text-yellow-600 dark:text-yellow-400 mt-1" />
               <div className="space-y-4 flex-1">
                 <h2 className="text-xl font-semibold">Achievements</h2>
                 <div className="space-y-4">
@@ -218,7 +219,7 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       District Toppers
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.district_toppers}
                       onChange={(e) =>
@@ -227,19 +228,19 @@ const AcademicsManager = () => {
                           district_toppers: +e.target.value,
                         })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
                   <div>
                     <label className="text-sm font-medium">Sports Medals</label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.sports_medals}
                       onChange={(e) =>
                         setStats({ ...stats, sports_medals: +e.target.value })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -247,13 +248,13 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Cultural Awards
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.cultural_awards}
                       onChange={(e) =>
                         setStats({ ...stats, cultural_awards: +e.target.value })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -264,7 +265,7 @@ const AcademicsManager = () => {
 
           <Card className="p-6">
             <div className="flex items-start gap-4">
-              <GraduationCap className="h-8 w-8 text-green-600 mt-1" />
+              <GraduationCap className="h-8 w-8 text-green-600 dark:text-green-400 mt-1" />
               <div className="space-y-4 flex-1">
                 <h2 className="text-xl font-semibold">Academic Performance</h2>
                 <div className="space-y-4">
@@ -272,7 +273,7 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Success Rate (%)
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.success_rate}
                       onChange={(e) =>
@@ -280,7 +281,7 @@ const AcademicsManager = () => {
                       }
                       min="0"
                       max="100"
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -288,7 +289,7 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Science Fair Wins
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.science_fair_wins}
                       onChange={(e) =>
@@ -297,7 +298,7 @@ const AcademicsManager = () => {
                           science_fair_wins: +e.target.value,
                         })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
@@ -305,7 +306,7 @@ const AcademicsManager = () => {
                     <label className="text-sm font-medium">
                       Years of Excellence
                     </label>
-                    <input
+                    <Input
                       type="number"
                       value={stats.years_of_excellence}
                       onChange={(e) =>
@@ -314,7 +315,7 @@ const AcademicsManager = () => {
                           years_of_excellence: +e.target.value,
                         })
                       }
-                      className="w-full mt-1 p-2 border rounded-md"
+                      className="mt-1"
                       disabled={saving}
                     />
                   </div>
