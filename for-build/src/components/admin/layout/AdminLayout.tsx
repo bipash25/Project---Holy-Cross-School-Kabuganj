@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -35,9 +35,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
         {/* Main content */}
         <main
-          className={`flex-1 p-4 md:p-8 w-full ${sidebarOpen ? "md:ml-64" : ""} transition-all duration-200`}
+          className={`flex-1 p-4 md:p-8 w-full transition-all duration-200
+            ${sidebarOpen ? "md:ml-64" : ""}
+            ${sidebarOpen ? "blur-sm md:blur-none" : ""}`}
         >
-          <div className="max-w-7xl mx-auto">{children}</div>
+          <div className="max-w-7xl mx-auto space-y-6 pt-12 md:pt-0">
+            {children}
+          </div>
         </main>
 
         {/* Overlay for mobile */}

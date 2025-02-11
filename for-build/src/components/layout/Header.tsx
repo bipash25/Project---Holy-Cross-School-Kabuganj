@@ -1,8 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { OptimizedImage } from "../ui/optimized-image";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-b">
       <div className="container mx-auto px-4">
@@ -19,6 +27,7 @@ const Header = () => {
             </div>
           </Link>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link to="/" className="text-sm font-medium hover:text-primary">
               Home
@@ -46,12 +55,13 @@ const Header = () => {
             </Link>
           </nav>
 
-          <div className="flex items-center gap-4">
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               className="mr-2"
-              onClick={() => document.documentElement.classList.toggle("dark")}
+              onClick={toggleTheme}
             >
               <span className="sr-only">Toggle theme</span>
               <svg
@@ -95,7 +105,84 @@ const Header = () => {
               <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </Button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden fixed inset-x-0 top-20 bg-white dark:bg-gray-900 border-b shadow-lg z-50">
+            <nav className="flex flex-col p-4 space-y-4">
+              <Link
+                to="/"
+                className="text-sm font-medium hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                to="/about"
+                className="text-sm font-medium hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                to="/academics"
+                className="text-sm font-medium hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Academics
+              </Link>
+              <Link
+                to="/news"
+                className="text-sm font-medium hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                News & Events
+              </Link>
+              <Link
+                to="/contact"
+                className="text-sm font-medium hover:text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <div className="pt-4 border-t space-y-4">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    toggleTheme();
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Toggle Theme
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Link to="/contact">Contact Us</Link>
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
