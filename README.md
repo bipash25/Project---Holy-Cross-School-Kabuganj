@@ -142,5 +142,5 @@ npm run build
 ## Contact
 
 For any queries regarding the project, please contact:
-- Email: [contact@hcsk.edu.in](mailto:contact@hcsk.edu.in)
+- Email: [hcskabuganj@gmail.com](mailto:hcskabuganj@gmail.com)
 - Phone: +91 6000632897
