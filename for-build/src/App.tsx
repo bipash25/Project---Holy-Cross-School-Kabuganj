@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider } from "./components/admin/auth-context";
 import { ProtectedRoute } from "./components/admin/protected-route";
@@ -51,21 +51,11 @@ import SettingsManager from "./components/admin/pages/SettingsManager";
 import AdminUsersManager from "./components/admin/pages/AdminUsersManager";
 
 function App() {
-  useEffect(() => {
-    // Remove loader after the first render
-    const loader = document.querySelector(".initial-loader");
-    if (loader) {
-      // Add fade out animation
-      loader.classList.add("fade-out");
-      setTimeout(() => loader.remove(), 500); // Remove after animation
-    }
-  }, []);
-
   return (
     <AuthProvider>
       <Suspense
         fallback={
-          <div className="h-[100vh] w-[100vw] flex items-center justify-center">
+          <div className="h-[100vh] w-[100vw] flex items-center justify-center bg-background">
             Loading...
           </div>
         }
