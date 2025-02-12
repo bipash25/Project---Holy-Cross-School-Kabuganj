@@ -98,7 +98,7 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
 
   return (
     <div className="h-full flex flex-col p-4">
-      {/* Close button for mobile */}
+      {/* Close Button - Mobile Only */}
       <Button
         variant="ghost"
         size="icon"
@@ -108,15 +108,17 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
         <X className="h-6 w-6" />
       </Button>
 
-      <div className="mb-8 mt-4 lg:mt-0">
+      {/* Admin Header */}
+      <div className="mb-8 mt-4 md:mt-0">
         <h2 className="text-xl font-bold text-white">Admin Panel</h2>
         <div className="flex items-center gap-2 mt-2 text-gray-400">
-          <UserCircle className="h-4 w-4" />
+          <UserCircle className="h-4 w-4 flex-shrink-0" />
           <p className="text-sm truncate">{user?.name || user?.email}</p>
         </div>
       </div>
 
-      <nav className="flex-1 -mx-2 overflow-y-auto">
+      {/* Navigation Items */}
+      <nav className="flex-1 -mx-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
         <ul className="space-y-1">
           {navItems
             .filter((item): item is NavItem => Boolean(item))
@@ -128,20 +130,21 @@ const AdminNav = ({ onNavItemClick }: AdminNavProps) => {
                   onClick={() => handleNavigation(item.path)}
                 >
                   {item.icon}
-                  <span className="ml-2">{item.label}</span>
+                  <span className="ml-2 truncate">{item.label}</span>
                 </Button>
               </li>
             ))}
         </ul>
       </nav>
 
+      {/* Logout Button */}
       <Button
         variant="ghost"
         onClick={handleLogout}
         className="w-full justify-start text-white hover:text-white hover:bg-gray-800 mt-auto"
       >
         <LogOut className="h-5 w-5 mr-2" />
-        Logout
+        <span className="truncate">Logout</span>
       </Button>
     </div>
   );

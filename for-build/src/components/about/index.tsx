@@ -5,6 +5,9 @@ import { SEO } from "../ui/seo";
 import { Book, Heart, Trophy, Users } from "lucide-react";
 import { BackToTop } from "../ui/back-to-top";
 import { EditableContent } from "../ui/editable-content";
+import { ErrorBoundary } from "../ui/error-boundary";
+import PrincipalSection from "./principal-section";
+import StaffSection from "./staff-section";
 import aboutImage from "@/assets/images/about_1.jpg";
 
 const About = () => {
@@ -75,6 +78,15 @@ const About = () => {
             </div>
           </section>
         </EditableContent>
+        {/* Principal Section */}
+        <ErrorBoundary section="Principal">
+          <PrincipalSection />
+        </ErrorBoundary>
+
+        {/* Staff Section */}
+        <ErrorBoundary section="Staff">
+          <StaffSection />
+        </ErrorBoundary>
       </main>
 
       <Footer />

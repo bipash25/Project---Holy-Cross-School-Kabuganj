@@ -17,6 +17,8 @@ import { ErrorBoundary } from "./ui/error-boundary";
 import CarouselSection from "./home/carousel-section";
 import { HomeNewsSection } from "./news/home-news-section";
 import { Skeleton } from "./ui/skeleton";
+import SchoolBuildingSection from "./home/school-building-section";
+import EventsSection from "./home/events-section";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -173,8 +175,18 @@ const Home = () => {
             </Card>
           </div>
         </section>
-        {/* News & Events Section */}
-        <ErrorBoundary section="News & Events">
+        {/* School Building Section */}
+        <ErrorBoundary section="School Building">
+          <SchoolBuildingSection />
+        </ErrorBoundary>
+
+        {/* Events Section */}
+        <ErrorBoundary section="Events">
+          <EventsSection />
+        </ErrorBoundary>
+
+        {/* News Section */}
+        <ErrorBoundary section="News">
           <HomeNewsSection />
         </ErrorBoundary>
       </main>
