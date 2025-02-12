@@ -2,31 +2,34 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import christmasImg from "../../assets/images/event-christmas.webp";
+import independenceDayImg from "../../assets/images/event-independence.webp";
+import sportsImg from "../../assets/images/event-sports.webp";
+import drawingImg from "../../assets/images/event-drawing.webp";
 
 const EventsSection = () => {
   const events = [
     {
       title: "Christmas Celebration",
-      image: "@/assets/images/christmas.webp",
+      image: christmasImg,
       description: "Annual Christmas celebration with students and staff",
       date: "December 25, 2023",
     },
     {
       title: "Independence Day Celebration",
-      image: "@/assets/images/independence_day_flag_hosting.webp",
+      image: independenceDayImg,
       description: "Flag hoisting ceremony and cultural performances",
       date: "August 15, 2023",
     },
     {
       title: "Sports Achievement",
-      image:
-        "@/assets/images/inter-school_sports_competition_football_winners.webp",
+      image: sportsImg,
       description: "Our football team won the inter-school competition",
       date: "September 30, 2023",
     },
     {
       title: "Drawing Competition",
-      image: "@/assets/images/junior_drawing_examination.webp",
+      image: drawingImg,
       description: "Junior students participating in drawing examination",
       date: "October 15, 2023",
     },

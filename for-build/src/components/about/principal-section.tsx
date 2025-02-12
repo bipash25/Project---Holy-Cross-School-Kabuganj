@@ -1,4 +1,5 @@
 import { Card } from "../ui/card";
+import principalImg from "../../assets/images/principal.webp";
 
 const PrincipalSection = () => {
   return (
@@ -8,7 +9,7 @@ const PrincipalSection = () => {
           <Card className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start">
             <div className="w-full md:w-1/3 flex-shrink-0">
               <img
-                src="@/assets/images/principal_1.webp"
+                src={principalImg}
                 alt="School Principal"
                 className="w-full rounded-lg shadow-lg"
               />

@@ -28,12 +28,13 @@ const Home = () => {
   useEffect(() => {
     const loadImages = async () => {
       try {
-        const [slider1, slider2, slider5] = await Promise.all([
-          import("@/assets/images/slider1.jpg").then((m) => m.default),
-          import("@/assets/images/slider2.jpg").then((m) => m.default),
-          import("@/assets/images/slider5.jpg").then((m) => m.default),
+        const [slider1, slider2, slider3, campus] = await Promise.all([
+          import("../assets/images/slider1.webp").then((m) => m.default),
+          import("../assets/images/slider2.webp").then((m) => m.default),
+          import("../assets/images/slider3.webp").then((m) => m.default),
+          import("../assets/images/campus.webp").then((m) => m.default),
         ]);
-        setCarouselImages([slider1, slider2, slider5]);
+        setCarouselImages([campus, slider1, slider2, slider3]);
       } catch (error) {
         console.error("Failed to load carousel images:", error);
       } finally {

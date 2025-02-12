@@ -1,4 +1,5 @@
 import { Card } from "../ui/card";
+import buildingImg from "../../assets/images/campus.webp";
 
 const SchoolBuildingSection = () => {
   return (
@@ -7,7 +8,7 @@ const SchoolBuildingSection = () => {
         <Card className="overflow-hidden">
           <div className="relative h-[400px] md:h-[500px]">
             <img
-              src="@/assets/images/school_main_building_exterior.webp"
+              src={buildingImg}
               alt="School Building"
               className="w-full h-full object-cover"
             />

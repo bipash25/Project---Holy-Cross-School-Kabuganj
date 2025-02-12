@@ -8,7 +8,7 @@ import { EditableContent } from "../ui/editable-content";
 import { ErrorBoundary } from "../ui/error-boundary";
 import PrincipalSection from "./principal-section";
 import StaffSection from "./staff-section";
-import aboutImage from "@/assets/images/about_1.jpg";
+import aboutImage from "../../assets/images/about-hero.webp";
 
 const About = () => {
   return (

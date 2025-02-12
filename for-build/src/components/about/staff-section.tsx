@@ -1,17 +1,20 @@
 import { Card } from "../ui/card";
+import meetingImg from "../../assets/images/staff-meeting.webp";
+import groupPhotoImg from "../../assets/images/staff-group.webp";
+import teachersDayImg from "../../assets/images/teachers-day.webp";
 
 const StaffSection = () => {
   const staffImages = [
     {
-      image: "@/assets/images/teachers_and_principal_meeting.webp",
+      image: meetingImg,
       caption: "Staff Meeting with Principal",
     },
     {
-      image: "@/assets/images/teachers_group_photo.webp",
+      image: groupPhotoImg,
       caption: "Teaching Staff (Archive)",
     },
     {
-      image: "@/assets/images/teachers_day.webp",
+      image: teachersDayImg,
       caption: "Teachers' Day Celebration",
     },
   ];

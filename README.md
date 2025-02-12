@@ -11,17 +11,17 @@ This project is a comprehensive school website that serves as both an informatio
 ### Public Features
 
 1. **Homepage**
-   - Dynamic hero carousel
-   - Quick access section for important links
-   - Latest news and events section
-   - Responsive navigation
+   - Dynamic hero carousel featuring campus and school activities
+   - Quick access section for important links (Admissions, Fees, Curriculum, Contact)
+   - School building showcase section
+   - Recent events grid with images
+   - Latest news section
 
 2. **About Section**
-   - School history
-   - Mission and vision
-   - Principal's message
-   - Core values
-   - School statistics
+   - Hero section with school overview
+   - Quick statistics (Years of Excellence, Student Count, Awards, Success Rate)
+   - Principal's message with photo
+   - Staff section with photo gallery
 
 3. **Academics**
    - Admission procedures
@@ -35,26 +35,16 @@ This project is a comprehensive school website that serves as both an informatio
    - Uniform guidelines
    - School timing
 
-5. **Facilities**
-   - Library
-   - Computer lab
-   - Science lab
-
-6. **News & Events**
-   - Latest school news
-   - Upcoming events
-   - News archive
-
 ### Admin Features
 
 1. **Dashboard**
    - Overview statistics
-   - Quick actions
-   - Real-time updates
+   - Quick actions menu
+   - Recent activities
 
 2. **Content Management**
    - News and events management
-   - Media gallery
+   - Media gallery with image optimization
    - Student records
    - Academic statistics
    - Calendar events
@@ -77,50 +67,54 @@ This project is a comprehensive school website that serves as both an informatio
 ### Key Libraries
 - React Router DOM
 - React Hook Form
-- Zod
+- Zod for validation
 - Date-fns
-- Tailwind Merge
-- Class Variance Authority
 
 ## Project Structure
 
 ```
 src/
-├── assets/         # Static assets (images, etc.)
-├── components/     # React components
-│   ├── admin/      # Admin dashboard components
-│   ├── layout/     # Layout components
-│   ├── ui/         # Reusable UI components
-│   └── ...         # Feature-specific components
-├── lib/           # Utility functions and API
-├── hooks/         # Custom React hooks
-└── types/         # TypeScript type definitions
+├── assets/
+│   └── images/         # Optimized images
+│       ├── slider/     # Carousel images
+│       ├── events/     # Event images
+│       └── staff/      # Staff and faculty images
+├── components/
+│   ├── admin/         # Admin dashboard components
+│   ├── home/          # Homepage sections
+│   ├── about/         # About page components
+│   ├── layout/        # Layout components
+│   └── ui/            # Reusable UI components
+├── lib/              # Utility functions
+├── hooks/            # Custom React hooks
+└── types/            # TypeScript definitions
 ```
 
-## Database Schema
+## Image Organization
 
-### Key Tables
-1. `news_events` - News and event entries
-2. `calendar_events` - School calendar events
-3. `school_stats` - School statistics
-4. `media` - Media gallery items
-5. `settings` - Website settings
-6. `students` - Student records
-7. `achievements` - School achievements
+The project follows a structured approach to image management:
+
+```
+images/
+├── slider1.webp        # Carousel images
+├── slider2.webp
+├── slider3.webp
+├── campus.webp         # School building
+├── about-hero.webp     # About page hero
+├── principal.webp      # Principal's photo
+├── staff-*.webp        # Staff related images
+└── event-*.webp        # Event photos
+```
 
 ## Setup & Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/bipash25/Project---Holy-Cross-School-Kabuganj.git
-```
-
+1. Clone the repository
 2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create a `.env` file with required environment variables:
+3. Set up environment variables:
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -133,38 +127,17 @@ npm run dev
 
 ## Build & Deployment
 
-1. Create production build:
 ```bash
 npm run build
 ```
 
-2. Preview production build:
-```bash
-npm run preview
-```
+## Performance Optimization
 
-## Key Features Implementation
-
-### Authentication
-- Simple admin authentication system
-- Protected routes for admin section
-- Session management
-
-### Responsive Design
-- Mobile-first approach
-- Breakpoints for all screen sizes
-- Optimized images and assets
-
-### Performance Optimization
-- Code splitting
-- Lazy loading of images
-- Optimized build configuration
+- WebP image format for optimal loading
+- Responsive images with appropriate sizing
+- Code splitting and lazy loading
+- Asset optimization and compression
 - PWA support
-
-### SEO
-- Meta tags management
-- Semantic HTML
-- Sitemap generation
 
 ## Contact
 
