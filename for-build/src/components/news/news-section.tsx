@@ -5,7 +5,7 @@ import { Calendar, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { NewsEvent } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
-import defaultImage from "@/assets/images/slider1.jpg";
+import defaultImage from "@/assets/images/campus.webp";
 
 type FilterType = "all" | "news" | "event";
 

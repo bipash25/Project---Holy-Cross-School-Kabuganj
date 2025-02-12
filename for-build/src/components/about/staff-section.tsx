@@ -1,7 +1,6 @@
 import { Card } from "../ui/card";
 import meetingImg from "../../assets/images/staff-meeting.webp";
 import groupPhotoImg from "../../assets/images/staff-group.webp";
-import teachersDayImg from "../../assets/images/teachers-day.webp";
 
 const StaffSection = () => {
   const staffImages = [
@@ -13,10 +12,6 @@ const StaffSection = () => {
       image: groupPhotoImg,
       caption: "Teaching Staff (Archive)",
     },
-    {
-      image: teachersDayImg,
-      caption: "Teachers' Day Celebration",
-    },
   ];
 
   return (
@@ -25,7 +20,7 @@ const StaffSection = () => {
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">
           Our Staff
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {staffImages.map((item, index) => (
             <Card
               key={index}

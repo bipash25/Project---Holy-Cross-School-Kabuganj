@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import logo from "@/assets/logo.png";
+import logo from "../../assets/logo.webp";
 
 // shadcn/ui or your own UI library imports
 import {

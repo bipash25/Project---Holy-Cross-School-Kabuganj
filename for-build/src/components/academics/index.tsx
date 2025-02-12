@@ -2,6 +2,8 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
 import { GraduationCap, BookOpen, Users } from "lucide-react";
+import slider3 from "../../assets/images/slider3.webp";
+
 const Academics = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -11,7 +13,7 @@ const Academics = () => {
         <section className="relative h-[400px]">
           <div className="absolute inset-0">
             <img
-              src="/src/assets/slider5.jpg"
+              src={slider3}
               alt="Academic Life"
               className="w-full h-full object-cover"
             />

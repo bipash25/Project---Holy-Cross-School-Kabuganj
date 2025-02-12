@@ -1,7 +1,7 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
-import aboutImage from "@/assets/images/about_2.jpg";
+import aboutImage from "../../assets/images/about-hero.webp";
 import { Heart, Users, Brain, Target, Star, Shield } from "lucide-react";
 const Values = () => {
   const values = [

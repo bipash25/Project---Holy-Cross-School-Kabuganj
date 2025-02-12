@@ -1,13 +1,14 @@
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import { Card } from "../ui/card";
-import aboutImage from "@/assets/images/about_1.jpg";
+import aboutImage from "../../assets/images/about-hero.webp";
 import {
   History as HistoryIcon,
   School,
   Trophy,
   Building2,
 } from "lucide-react";
+
 const History = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -161,4 +162,5 @@ const History = () => {
     </div>
   );
 };
+
 export default History;
