@@ -22,40 +22,20 @@ export function getImageProps(src: string) {
   };
 }
 
-export async function optimizeImage(file: File): Promise<string> {
-  try {
-    // Create a canvas element
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Could not get canvas context");
-
-    // Create an image element
-    const img = new Image();
-    const imageUrl = URL.createObjectURL(file);
-
-    // Wait for image to load
-    await new Promise((resolve, reject) => {
-      img.onload = resolve;
-      img.onerror = reject;
-      img.src = imageUrl;
-    });
-
-    // Set canvas dimensions
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Draw image to canvas
-    ctx.drawImage(img, 0, 0);
-
-    // Convert to WebP with quality optimization
-    const optimizedDataUrl = canvas.toDataURL("image/webp", 0.8);
-
-    // Clean up
-    URL.revokeObjectURL(imageUrl);
-
-    return optimizedDataUrl;
-  } catch (error) {
-    console.error("Error optimizing image:", error);
-    throw error;
-  }
-}
+export const imageConfig = {
+  eventThumbnail: {
+    width: 400,
+    height: 300,
+    quality: 80,
+  },
+  carouselImage: {
+    width: 1920,
+    height: 1080,
+    quality: 85,
+  },
+  logo: {
+    width: 96,
+    height: 96,
+    quality: 90,
+  },
+};

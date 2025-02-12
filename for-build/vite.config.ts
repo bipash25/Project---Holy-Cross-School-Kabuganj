@@ -3,7 +3,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
-import { splitVendorChunkPlugin } from "vite";
 import compression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
@@ -17,13 +16,12 @@ export default defineConfig({
     react(),
     imagetools({
       defaultDirectives: new URLSearchParams({
-        format: "webp", // Convert all images to WebP
-        quality: "80", // Good balance of quality and size
-        w: "auto", // Maintain aspect ratio
+        format: "webp",
+        quality: "80",
+        w: "auto",
         fit: "contain",
       }),
     }),
-    splitVendorChunkPlugin(),
     compression({
       algorithm: "gzip",
       ext: ".gz",
@@ -63,9 +61,16 @@ export default defineConfig({
     outDir: "dist",
     rollupOptions: {
       output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "ui-vendor": ["@radix-ui/react-dialog", "@radix-ui/react-tabs"],
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            if (id.includes("react")) {
+              return "react-vendor";
+            }
+            if (id.includes("@radix-ui")) {
+              return "ui-vendor";
+            }
+            return "vendor";
+          }
         },
       },
     },
