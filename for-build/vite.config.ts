@@ -20,45 +20,66 @@ export default defineConfig({
       }),
     }),
     VitePWA({
-      registerType: "autoUpdate",
-      includeAssets: ["**/*.{webp,png,jpg,jpeg}"],
-    }),
+      registerType: 'autoUpdate',
+      includeAssets: ['**/*.{webp,png,jpg,jpeg}'],
+      manifest: {
+        name: 'Holy Cross School Kabuganj',
+        short_name: 'HCSK',
+        theme_color: '#ffffff',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/assets/images/logo-B-xAu0RA.webp',
+            sizes: '192x192',
+            type: 'image/webp'
+          }
+        ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,webp}']
+      }
+    })
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
+    }
   },
   build: {
     outDir: "dist",
     rollupOptions: {
       output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "ui-vendor": ["@radix-ui"],
-          vendor: [],
-        },
-      },
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@radix-ui')) {
+              return 'ui-vendor';
+            }
+            return 'vendor';
+          }
+        }
+      }
     },
     chunkSizeWarningLimit: 1000,
-    sourcemap: true, // Enable sourcemaps for debugging
+    sourcemap: true,
     minify: "terser",
     terserOptions: {
       compress: {
-        drop_console: false, // Keep console logs for debugging
-        drop_debugger: true,
-      },
-    },
+        drop_console: false,
+        drop_debugger: true
+      }
+    }
   },
   assetsInclude: ["**/*.webp"],
   optimizeDeps: {
     include: [
-      "react",
-      "react-dom",
-      "react-router-dom",
-      "@radix-ui/react-navigation-menu",
-      "@radix-ui/react-slot",
-    ],
-    exclude: [],
-  },
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@radix-ui/react-navigation-menu',
+      '@radix-ui/react-slot'
+    ]
+  }
 });
