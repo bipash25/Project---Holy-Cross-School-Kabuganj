@@ -6,22 +6,37 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./components/theme-provider";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
-console.log("Starting app initialization...");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Starting app initialization...");
 
-try {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-      <HelmetProvider>
-        <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ThemeProvider>
-      </HelmetProvider>
-    </React.StrictMode>,
-  );
-  console.log("App mounted successfully");
-} catch (error) {
-  console.error("Error mounting app:", error);
-}
+  const rootElement = document.getElementById("root");
+
+  if (!rootElement) {
+    console.error("Root element not found");
+    return;
+  }
+
+  try {
+    const root = ReactDOM.createRoot(rootElement);
+
+    root.render(
+      <React.StrictMode>
+        <ErrorBoundary>
+          <HelmetProvider>
+            <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ThemeProvider>
+          </HelmetProvider>
+        </ErrorBoundary>
+      </React.StrictMode>,
+    );
+
+    console.log("App mounted successfully");
+  } catch (error) {
+    console.error("Error mounting app:", error);
+  }
+});

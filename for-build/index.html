@@ -2,15 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/webp" href="./src/assets/logo.webp" />
+    <link
+      rel="icon"
+      type="image/webp"
+      href="/assets/images/logo-B-xAu0RA.webp"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Holy Cross School Kabuganj</title>
-    <link rel="preload" as="image" href="./src/assets/images/campus.webp" />
-    <link rel="preload" as="image" href="./src/assets/images/slider1.webp" />
-    <link rel="preload" as="image" href="./src/assets/images/slider2.webp" />
+    <link rel="preload" as="image" href="/assets/images/campus--LgAgngH.webp" />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/images/slider1-DBsofD8R.webp"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/images/slider2-CPB-maq5.webp"
+    />
+    <style>
+      #root:empty {
+        display: none;
+      }
+      #fallback {
+        display: none;
+      }
+      #root:empty + #fallback {
+        display: block;
+        text-align: center;
+        padding: 20px;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <div id="fallback">
+      <h1>Loading...</h1>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
