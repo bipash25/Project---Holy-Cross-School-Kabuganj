@@ -2,8 +2,8 @@ import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { imagetools } from "vite-imagetools";
+import { VitePWA } from "vite-plugin-pwa";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
   server: {
@@ -18,6 +18,10 @@ export default defineConfig({
         quality: "80",
         as: "picture",
       }),
+    }),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["**/*.{webp,png,jpg,jpeg}"],
     }),
   ],
   resolve: {
@@ -39,6 +43,16 @@ export default defineConfig({
             }
             return "vendor";
           }
+        },
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name) {
+            const info = assetInfo.name.split(".");
+            const ext = info[info.length - 1];
+            if (/webp|png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+              return `assets/images/[name]-[hash][extname]`;
+            }
+          }
+          return `assets/[name]-[hash][extname]`;
         },
       },
     },
