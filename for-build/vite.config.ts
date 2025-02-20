@@ -10,7 +10,7 @@ import compression from "vite-plugin-compression";
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
   server: {
-    port: 3000,
+    port: 4173,
     host: true,
   },
   plugins: [

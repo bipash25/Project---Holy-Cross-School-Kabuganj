@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../ui/card";
 import { Calendar, Clock, ChevronLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { NewsEvent } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
-import defaultImage from "@/assets/images/campus.webp";
+
+const DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1546410531-bb4caa6b424d";
 
 type FilterType = "all" | "news" | "event";
 
@@ -45,37 +47,37 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadNews = async () => {
-      try {
-        setLoading(true);
-        const query = supabase
-          .from("news_events")
-          .select("*")
-          .order("date", { ascending: false });
-
-        if (filter !== "all") {
-          query.eq("type", filter);
-        }
-
-        if (!showAll) {
-          query.limit(3);
-        } else {
-          query.limit(PAGE_SIZE);
-        }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-        setNews(data || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load news");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadNews();
-  }, [filter, showAll]);
+  }, []);
+
+  const loadNews = async () => {
+    try {
+      setLoading(true);
+      const query = supabase
+        .from("news_events")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (filter !== "all") {
+        query.eq("type", filter);
+      }
+
+      if (!showAll) {
+        query.limit(3);
+      } else {
+        query.limit(PAGE_SIZE);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      setNews(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load news");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (error) {
     return <div className="text-center text-red-500 py-8">{error}</div>;
@@ -123,7 +125,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
           ))}
         </div>
       ) : news.length === 0 ? (
-        <div className="text-center text-muted-foreground py-8">
+        <div className="text-center py-8 text-muted-foreground">
           No {filter === "all" ? "news or events" : filter} found.
         </div>
       ) : (
@@ -135,7 +137,7 @@ export const NewsSection = ({ showAll = false }: NewsSectionProps) => {
             >
               <div className="aspect-video relative">
                 <img
-                  src={item.image_url || defaultImage}
+                  src={item.image_url || DEFAULT_IMAGE}
                   alt={item.title}
                   className="w-full h-full object-cover"
                 />

@@ -31,18 +31,6 @@ dist-ssr
 .env.test.local
 .env.production.local
 
-# Build output
-dist
-build
-out
-
-# Coverage directory
-coverage
-
-# Cache directories
-.cache
-.temp
-
-# System Files
-.DS_Store
-Thumbs.db
+# Tempo
+**/tempobook/dynamic/
+**/tempobook/storyboards/

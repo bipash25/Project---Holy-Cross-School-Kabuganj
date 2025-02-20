@@ -1,3 +1,5 @@
+import { format } from "path";
+
 export function generateResponsiveImage(
   src: string,
   sizes: number[],
@@ -9,7 +11,7 @@ export function getSrcSet(src: string): string {
   const sizes = [320, 640, 768, 1024, 1280, 1536];
   return sizes
     .map((size) => `${src}?w=${size}&format=webp&q=80 ${size}w`)
-    .join(", ");
+      .join(", ");
 }
 
 export function getImageProps(src: string) {
