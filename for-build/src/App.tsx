@@ -55,8 +55,9 @@ function App() {
     <AuthProvider>
       <Suspense
         fallback={
-          <div className="h-[100vh] w-[100vw] flex items-center justify-center bg-background">
-            Loading...
+          <div className="h-[100vh] w-[100vw] flex flex-col items-center justify-center bg-background">
+            <div>Loading application...</div>
+            <div className="mt-2 text-sm text-gray-500">Please wait</div>
           </div>
         }
       >

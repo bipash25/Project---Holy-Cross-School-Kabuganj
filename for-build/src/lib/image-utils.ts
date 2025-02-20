@@ -1,49 +1,26 @@
-export function generateResponsiveImage(src: string): string {
-  if (!src) return "";
+import { format } from "path";
 
-  // Handle already processed images (e.g. from URLs)
-  if (src.startsWith("http")) return src;
-
-  try {
-    // For local images, use Vite's import.meta.url feature
-    const imageUrl = new URL(src, import.meta.url).href;
-    return imageUrl;
-  } catch (e) {
-    console.error("Error generating responsive image:", e);
-    return src;
-  }
+export function generateResponsiveImage(
+  src: string,
+  sizes: number[],
+): string[] {
+  return sizes.map((size) => `${src}?w=${size}&format=webp&q=80`);
 }
 
 export function getSrcSet(src: string): string {
-  if (!src) return "";
-
-  // Handle already processed images
-  if (src.startsWith("http")) return src;
-
-  try {
-    const widths = [320, 640, 960, 1280, 1920];
-    const srcSet = widths
-      .map((w) => {
-        const imageUrl = new URL(`${src}?w=${w}&format=webp`, import.meta.url)
-          .href;
-        return `${imageUrl} ${w}w`;
-      })
+  const sizes = [320, 640, 768, 1024, 1280, 1536];
+  return sizes
+    .map((size) => `${src}?w=${size}&format=webp&q=80 ${size}w`)
       .join(", ");
-    return srcSet;
-  } catch (e) {
-    console.error("Error generating srcset:", e);
-    return src;
-  }
 }
 
-export function getImageProps(src: string, alt: string = "") {
+export function getImageProps(src: string) {
   return {
-    src: generateResponsiveImage(src),
+    src: `${src}?format=webp&q=80`,
     srcSet: getSrcSet(src),
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     loading: "lazy" as const,
     decoding: "async" as const,
-    alt,
   };
 }
 
